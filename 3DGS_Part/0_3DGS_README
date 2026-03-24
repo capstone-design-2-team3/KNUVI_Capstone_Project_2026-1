@@ -23,19 +23,18 @@
 - Baseline Model : LongSplat (Unposed 3DGS)
 - Method : 딥러닝(딥퓨전)기반 Image Refinement가 가능한 모델 사용하여 LongSplat의 Input단에서 Weather Artifact 제거
 - Metric : Rendered image에 대한 PSNR + LongSplat이 추정한 Camera Pose 정확도
+	- PSNR은 Raw Img & Weathred Img & Un-weathered Img 각각의 렌더링 결과에 대해 측정하여 비교할 것
+	- 굳이 일반 Weathered Img의 PSNR까지 측정할 필요는 없음
 
 ## 1) Dataset Preprocess
 - Dataset
 	- WeatherGS Dataset
 	- Free Dataset : 자유로운 시점 및 긴 시간의 영상 (w/ Weather synthesis)
-- Compression
-	- JPEG
-	- AVC
-	- HEVC
 
 ---
 # ==Paper Writing==
 - NVS 렌더링의 중요성 -> NeRF/3DGS 소개 -> Unposed 3DGS 등장
 - Unposed GS + Weather 관련 연구 없음
 - 따라서 우리 연구가 필요함
+
 ## 1) Related Work
