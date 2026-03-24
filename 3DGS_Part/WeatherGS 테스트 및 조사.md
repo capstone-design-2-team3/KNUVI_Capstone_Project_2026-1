@@ -35,7 +35,7 @@
     - **역할**: WeatherGS가 넘어서는 출발점
     - **의미**: 기존 radiance field 기반 3D 재구성의 대표 논문이며, WeatherGS는 NeRF가 dynamic weather particles에 취약하다는 점을 문제로 삼는다.
         
-        <img width="579" height="130" alt="스크린샷_2026-03-12_215738" src="https://github.com/user-attachments/assets/3c6bf4c1-8c2a-4ced-aa03-e8e2818d84e9" />
+    <img width="579" height="130" alt="스크린샷_2026-03-12_215738" src="https://github.com/user-attachments/assets/3c6bf4c1-8c2a-4ced-aa03-e8e2818d84e9" />
 
 
     ### 2) 3D Gaussian Splatting for Real-Time Radiance Field Rendering
