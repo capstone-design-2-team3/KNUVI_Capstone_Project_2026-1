@@ -35,23 +35,23 @@
     - **역할**: WeatherGS가 넘어서는 출발점
     - **의미**: 기존 radiance field 기반 3D 재구성의 대표 논문이며, WeatherGS는 NeRF가 dynamic weather particles에 취약하다는 점을 문제로 삼는다.
         
-        ![스크린샷 2026-03-12 215738.png](%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2026-03-12_215738.png)
-        
-    
+        <img width="579" height="130" alt="스크린샷_2026-03-12_215738" src="https://github.com/user-attachments/assets/3c6bf4c1-8c2a-4ced-aa03-e8e2818d84e9" />
+
+
     ### 2) 3D Gaussian Splatting for Real-Time Radiance Field Rendering
     
     - **역할**: WeatherGS의 핵심 백본
     - **의미**: WeatherGS는 이 논문의 3DGS를 기반으로 장면을 복원하고, 실험에서는 원본 3DGS를 vanilla baseline으로 비교한다.
         
-        ![스크린샷 2026-03-09 001348.png](%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2026-03-09_001348.png)
+    <img width="820" height="163" alt="스크린샷_2026-03-09_001348" src="https://github.com/user-attachments/assets/a5a6e8bd-ff81-4b2d-bfb1-890ac8050ad1" />
+
         
-    
     ### 3) DerainNeRF: 3D Scene Estimation with Adhesive Waterdrop Removal
     
     - **역할**: 가장 직접적인 3D adverse-weather 선행연구
     - **의미**: 3D 공간에서 weather effect removal을 시도한 직접적인 prior work로, WeatherGS는 이를 확장해 snow/rain streak/lens occlusion까지 더 넓게 다룬다.
         
-        ![스크린샷 2026-03-12 220017.png](%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2026-03-12_220017.png)
+    <img width="676" height="123" alt="스크린샷_2026-03-12_220017" src="https://github.com/user-attachments/assets/6ddab54e-71d7-4d7c-8f76-d958e43180e5" />
         
     
     ### 4) High-Resolution Image Synthesis with Latent Diffusion Models
@@ -69,8 +69,8 @@
     - **역할**: LED의 핵심 출처
     - **의미**: WeatherGS의 LED는 이 논문의 detection module을 활용해 렌즈 가림을 찾는다. GitHub README에서도 AttGAN 기반임을 밝힌다.
         
-        ![스크린샷 2026-03-12 220312.png](%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2026-03-12_220312.png)
-        
+    <img width="669" height="195" alt="스크린샷_2026-03-12_220312" src="https://github.com/user-attachments/assets/25c472d4-747e-4abf-9b82-1d3e37144b23" />
+
     
     # 4. 인용 논문의 큰 갈래
     
