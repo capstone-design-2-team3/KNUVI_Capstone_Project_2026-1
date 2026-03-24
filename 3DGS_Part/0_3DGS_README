@@ -1,0 +1,41 @@
+# 3DGS Todo List
+
+## 1) 주저자 업무
+- [x] LongSplat Test With WeatherGS dataset (3/22)
+- [ ] 딥퓨전 기반 2D Refinement 모델 탐색 (3/25)
+- [ ] 구체적인 실험 계획 수립 (3/26)
+- [ ] LongSplat Test with Free dataset (3/26)
+- [ ] Free Dataset에 WeatherGS의 날씨 합성 모델 Test (3/26)
+- [ ] 논문 초안 일부 작성 (3/28)
+	- [ ] Introduction 초안
+	- [ ] Main Figure 초안
+## 2) 공저자 업무
+- [x] Related Work 조사 (3/23)
+	- 코드 존재하는 탑컨퍼 논문 위주
+	- NVS, NeRF/3DGS, Unposed 3DGS 각각의 대표 논문 체크
+	- Weather View 와 관련된 3D Recon 모델 체크
+- [ ] Related Work 조사내용 인용 가능하도록 정리 (3/26)
+
+---
+
+> Weather Artifact가 있는 2D Multi-view Video에 2D Refinement 적용해 Unposed 3DGS의 3D Reconstruction 성능 저하 개선
+# ==Experiment== 
+- Baseline Model : LongSplat (Unposed 3DGS)
+- Method : 딥러닝(딥퓨전)기반 Image Refinement가 가능한 모델 사용하여 LongSplat의 Input단에서 Weather Artifact 제거
+- Metric : Rendered image에 대한 PSNR + LongSplat이 추정한 Camera Pose 정확도
+
+## 1) Dataset Preprocess
+- Dataset
+	- WeatherGS Dataset
+	- Free Dataset : 자유로운 시점 및 긴 시간의 영상 (w/ Weather synthesis)
+- Compression
+	- JPEG
+	- AVC
+	- HEVC
+
+---
+# ==Paper Writing==
+- NVS 렌더링의 중요성 -> NeRF/3DGS 소개 -> Unposed 3DGS 등장
+- Unposed GS + Weather 관련 연구 없음
+- 따라서 우리 연구가 필요함
+## 1) Related Work
