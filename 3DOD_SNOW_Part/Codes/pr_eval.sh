@@ -1,0 +1,3 @@
+python eval_rcnn.py --cfg_file cfgs/car.yaml --ckpt ckpt/car_epoch_70.pth --batch_size 1 --eval_mode rcnn --data_path ../data/KITTI
+python eval_rcnn.py --cfg_file cfgs/cyclist.yaml --ckpt ckpt/cyclist_epoch_70.pth --batch_size 1 --eval_mode rcnn --data_path ../data/KITTI
+python eval_rcnn.py --cfg_file cfgs/pedestrian.yaml --ckpt ckpt/pedestrian_epoch_70.pth --batch_size 1 --eval_mode rcnn --data_path ../data/KITTI
