@@ -1,0 +1,55 @@
+# 1. Base Image: CUDA 12.4
+FROM nvidia/cuda:12.4.1-devel-ubuntu22.04
+
+# 2. 환경 변수 설정
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TORCH_CUDA_ARCH_LIST="8.6;9.0+PTX"
+ENV CUDA_HOME=/usr/local/cuda
+
+# 작업 경로 설정
+WORKDIR /workspace
+
+# 3. 필수 시스템 패키지 설치
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    python-is-python3 \
+    git \
+    build-essential \
+    ninja-build \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# 4. PyTorch 및 프로젝트 의존성 설치
+# 버전 불일치를 막기 위해 CUDA 12.4용 PyTorch를 명시적으로 설치합니다.
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+
+# 나머지 의존성 패키지 설치 (이전과 동일)
+RUN pip install --no-cache-dir \
+    numba \
+    scipy \
+    fire \
+    tensorboardX \
+    protobuf \
+    opencv-python \
+    shapely \
+    spconv-cu124 # CUDA 12.4 환경에 맞춰 spconv도 버전을 명시해 주는 것이 좋습니다.
+
+# 5. 소스 코드 복사
+COPY . /workspace
+
+# 5.5. Legacy PyTorch (THC & API) 코드 딥 패치
+RUN find /workspace/pointnet2_lib /workspace/lib/utils/iou3d /workspace/lib/utils/roipool3d -type f \( -name "*.cpp" -o -name "*.cu" -o -name "*.h" \) -exec sed -i 's/#include <THC\/THC.h>/\/\/ #include <THC\/THC.h>\n#include <ATen\/cuda\/CUDAContext.h>/g' {} + && \
+    find /workspace/pointnet2_lib /workspace/lib/utils/iou3d /workspace/lib/utils/roipool3d -type f \( -name "*.cpp" -o -name "*.cu" -o -name "*.h" \) -exec sed -i 's/extern THCState \*state;//g' {} + && \
+    find /workspace/pointnet2_lib /workspace/lib/utils/iou3d /workspace/lib/utils/roipool3d -type f \( -name "*.cpp" -o -name "*.cu" -o -name "*.h" \) -exec sed -i 's/THCState_getCurrentStream(state)/at::cuda::getCurrentCUDAStream()/g' {} + && \
+    find /workspace/pointnet2_lib /workspace/lib/utils/iou3d /workspace/lib/utils/roipool3d -type f \( -name "*.cpp" -o -name "*.cu" -o -name "*.h" \) -exec sed -i 's/AT_CHECK/TORCH_CHECK/g' {} + && \
+    find /workspace/pointnet2_lib /workspace/lib/utils/iou3d /workspace/lib/utils/roipool3d -type f \( -name "*.cpp" -o -name "*.cu" -o -name "*.h" \) -exec sed -i 's/\.type()\.is_cuda()/.is_cuda()/g' {} +
+
+# 6. 커스텀 CUDA Extension 빌드 (경로 수정: lib/utils/roipool3d)
+RUN cd /workspace/pointnet2_lib/pointnet2 && python setup.py install && \
+    cd /workspace/lib/utils/iou3d && python setup.py install && \
+    cd /workspace/lib/utils/roipool3d && python setup.py install
+
+# 7. 작업 디렉토리 변경
+WORKDIR /workspace
