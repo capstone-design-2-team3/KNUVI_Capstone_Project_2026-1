@@ -2,7 +2,7 @@
 
 ## 1) 주저자 업무
 - [x] LongSplat Test With WeatherGS dataset (3/22)
-- [ ] 딥퓨전 기반 2D Refinement 모델 탐색 (3/25)
+- [x] 딥퓨전 기반 2D Refinement 모델 탐색 (3/25)
 - [ ] 구체적인 실험 계획 수립 (3/26)
 - [ ] LongSplat Test with Free dataset (3/26)
 - [ ] Free Dataset에 WeatherGS의 날씨 합성 모델 Test (3/26)
