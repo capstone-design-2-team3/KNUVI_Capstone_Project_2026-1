@@ -95,3 +95,13 @@
 ### 결론
 > **MWFormer**를 메인 2D Refinement 모델로 채택하고,  
 > **UtilityIR**을 ablation 비교 대상으로 함께 실험하여 논문 기여도를 높이는 전략 권장
+
+
++추가로, AllWeatherNet도 있긴 함. 
+**AllWeather-Net (ICPR 2025)**
+- Qian et al., https://github.com/Jumponthemoon/AllWeatherNet
+- snow, rain, fog, nighttime을 통합적으로 처리하는 image enhancement 모델
+- SIAM (Scaled Illumination-aware Attention) + 3-level hierarchical discrimination
+- 기상 파티클 제거에 그치지 않고 color/texture 전반을 보정하는 enhancement 방식
+- **→ MWFormer 대비 추가 ablation 후보로 고려 가능**
+- 평가 데이터: ACDC, Dark Zurich, Foggy Zurich, Nighttime Driving
