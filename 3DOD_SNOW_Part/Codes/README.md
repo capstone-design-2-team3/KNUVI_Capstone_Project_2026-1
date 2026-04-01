@@ -4,7 +4,9 @@ pp_ : PointPillars
 pr_ : PointRCNN  
 vr_ : VoxelRCNN  
 mv_ : mvmm  
-  
+
+---
+
 mv_inference.py : Inference kitti-snow dataset to predict model (ply file format)  
   
 pp_evaluate_snow.py : Evaluate kitti-snow dataset  
@@ -21,3 +23,5 @@ vr_inference.py : Inference kitti-snow dataset to predict model (ply file format
 vr_project_gt_to_image.py : Plotting GT bbox on image  
 vr_project_to_image.py : Plotting predicted bbox on image  
 vr_train_voxel_rcnn.sh : Running train code to get model checkpoint  
+
+---
