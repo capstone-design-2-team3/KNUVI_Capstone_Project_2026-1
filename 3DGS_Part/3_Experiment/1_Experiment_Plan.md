@@ -1,7 +1,10 @@
 # 3DGS Experiment Plan
 
+(보류)
+
 > Weather Artifact가 있는 2D Multi-view Video에 2D Refinement 적용해
 > Unposed 3DGS의 3D Reconstruction 성능 저하 개선
+
 ## 1. 개요
 - **Baseline Model**: LongSplat (Unposed 3DGS)
 - **2D Refinement 후보**: MWFormer (1순위) / UtilityIR (ablation)
