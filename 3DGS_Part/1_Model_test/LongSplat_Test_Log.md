@@ -1,4 +1,5 @@
 # LongSplat Test
+https://github.com/NVlabs/LongSplat/tree/main
 
 ## Task Contents
 
@@ -22,3 +23,16 @@
 -> 실패. 계속해서 시도 중
 
 3/10 기준 실습실 자원 사용 가능성 불확실. 개인장비 또는 코랩 런타임 사용 필요
+
+# Model Test 
+
+## 1. With WeatherGS dataset
+- 연구실 서버 사용하여 진행
+- 세팅 과정은 LongSplat Setting.md 참고
+- 기본 렌더링 결과가 꽤 좋지 않게 나옴
+  - WeatherGS가 제공하는 데이터셋 프레임 수가 적어서 그런지, LongSplat의 세팅이 잘못된 것인지 모르겠음
+  - Free dataset으로 다시 시도해봐야 할 것 같음
+  - 추가로, LongSplat의 output은 3DGS 포맷과 다름. 이것도 결과가 안좋아 보이는 원인일 수 있으니 변환을 거친 뒤에 확인하는 것도 필요함
+
+## 2. With Free dataset
+- 진행 예정
