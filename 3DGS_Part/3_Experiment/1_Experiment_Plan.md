@@ -1,62 +1,51 @@
-# 3DGS Experiment Plan
+> 주제: Posed vs. Unposed 3DGS의 날씨 민감도 및 2D 전처리 의존성 비교 분석
+> 향후 발전 방향: 비정형 긴 궤적(Casual Long Videos) 환경에서의 악천후 3D 복원 연구 (Unposed 3DGS 중점)
 
-(보류)
+악천후라는 변수와 2D 전처리 과정이 '포즈 추정 기반(Posed)'과 '포즈-형상 결합 최적화(Unposed)'라는 두 가지 3DGS 패러다임에 각각 어떤 식으로 작용하는지 대조하는 실험
 
-> Weather Artifact가 있는 2D Multi-view Video에 2D Refinement 적용해
-> Unposed 3DGS의 3D Reconstruction 성능 저하 개선
+# 1. Variable and Data
+**Free Dataset (Real-world / 비정형 궤적 환경)**
+- F2-NeRF에서 제공하는 7개 씬을 기반으로 하며, 스마트폰 등으로 자유롭게 촬영된 비정형 궤적(Free trajectory) 영상입니다. WeatherEdit 도구를 이용해 눈, 비, 안개 및 심각도(Severity)를 조절하여 합성합니다.
+- 실내 장면인 Lab Scene은 제외합니다.
 
-## 1. 개요
-- **Baseline Model**: LongSplat (Unposed 3DGS)
-- **2D Refinement 후보**: MWFormer (1순위) / UtilityIR (ablation)
-- **Weather Synthesis 도구**: WeatherEdit
-- **핵심 아이디어**: LongSplat Input단에서 Weather Artifact 제거 후 3D Reconstruction 수행
+입력 데이터는 모델의 성능 한계와 날씨의 영향, 그리고 전처리의 효과를 다각도로 보기 위해 세 가지 조건으로 구성합니다.
+- Raw (원본): 날씨 노이즈가 없는 맑은 영상입니다. 각 모델이 도달할 수 있는 최상의 성능(Upper Bound)을 확인하는 기준이 됩니다.
+- Weathered (악천후): 눈이나 비 등 아티팩트가 포함된 영상입니다. 날씨 노이즈가 시스템에 유발하는 오류의 초기 상태(Baseline)를 확인합니다.
+- Un-weathered (전처리): 2D 복원 모델을 거쳐 아티팩트를 제거한 영상입니다. 전처리 단계에서 발생하는 시점 간 불일치(Multi-view inconsistency)가 3D 복원에 미치는 영향을 관찰하는 핵심 데이터입니다.
 
-## 2. 데이터셋
-### (1) WeatherGS Dataset
-- Synthetic: Deblur-NeRF 기반 scene을 Blender로 재편집
-- 3개 scene (Tanabata, Factory, Pool) × snowy + rainy = 6가지 조건
-- 파티클 시스템으로 snowflake/raindrop 물리 시뮬레이션 + motion blur 적용
-- Real-world: YouTube 영상에서 keyframe 추출 (snowy/rainy)
-- GT: 맑은 날씨 동일 scene의 렌더링 결과
-### (2) Free Dataset (자체 구성)
-- F2-NeRF의 Free Dataset을 기반으로 활용 (7개 scene, free trajectory)
-- WeatherEdit으로 weather synthesis 적용
-- weather type: snow / rain / fog
-- severity: light / moderate / heavy
-- TV-Attention으로 multi-view, multi-frame 일관성 보장
+# 2. Experiment Case
+### Case A. Posed 3DGS (COLMAP + 일반 3DGS)
+순차적 파이프라인에서 날씨와 전처리가 '특징점 매칭'과 '포즈 정확도'에 미치는 영향을 확인합니다.
+- **A1 (Raw + Posed):** 최적의 환경에서 Posed 모델의 기준 성능을 측정합니다.
+- **A2 (Weathered + Posed):** 강한 노이즈가 특징점 매칭을 방해할 때, COLMAP의 포즈 추정이 어디서부터 붕괴되는지 관찰합니다.
+- **A3 (Un-weathered + Posed):** 전처리로 이미지는 깨끗해졌으나, 2D 복원 과정에서 생긴 미세한 시점 불일치가 SfM의 기하학적 정렬에 오차를 남기는지 확인합니다.
+### Case B. Unposed 3DGS (LongSplat)
+포즈와 형상을 동시에 최적화하는 모델이 날씨 입자와 전처리 오차를 어떻게 수용하는지 확인합니다.
+- **B1 (Raw + Unposed):** 맑은 환경에서 Unposed 모델의 기준 성능을 측정합니다.
+- **B2 (Weathered + Unposed):** 포즈 제약이 느슨한 상태에서 날씨 입자가 가우시안 형상으로 직접 복원되며 발생하는 렌더링 품질 저하를 확인합니다.
+- **B3 (Un-weathered + Unposed):** 전처리된 이미지를 사용하되, 전처리 모델의 한계인 시점 불일치를 LongSplat의 결합 최적화 과정이 어느 정도까지 스스로 보정하고 수용해내는지 관찰합니다.
 
-## 3. 실험 전체 파이프라인
-[Free Dataset / WeatherGS Dataset]
-↓
-[Weather Synthesis] WeatherEdit
-(multi-view 일관성 보장, severity 조절 가능)
-↓
-Multi-view Frames (w/ Weather Artifact)
-↓
-[2D Refinement] MWFormer (or UtilityIR)
-↓
-Un-weathered Multi-view Frames
-↓
-[Unposed 3DGS] LongSplat
-↓
-3D Reconstruction + Camera Pose Estimation
-### (1) 실험 변수
-- Weather Type: Snow / Rain
-- Weather Severity: Light / Moderate / Heavy
-### (2) 실험 우선순위
-- 1순위: Snow + MWFormer
-- 2순위: Rain + MWFormer
-- 3순위: 동일 조건 + UtilityIR
+### 2D 복원 모델
+**MWFormer** (TIP 2025)
+- **핵심 메커니즘:** 보조 네트워크인 **하이퍼 네트워크(Hyper-network)와 FiLM(Feature-wise Linear Modulation)을 사용하여 날씨 열화에 따라 메인 네트워크의 파라미터를 동적으로 변조**합니다. 대조 학습(Contrastive learning)을 통해 이미지의 내용과는 독립적인 날씨 특성 임베딩을 추출합니다.
+- **장점:** 재학습 없이도 단일 날씨 및 비와 눈이 섞인 복합 날씨(Hybrid weather) 모드를 유연하게 전환할 수 있습니다.
 
-## 4. Evaluation Metric
-
--  **Raw Input**: weather 없는 원본으로 LongSplat 실행 → upper bound
-- **Weathered Input**: artifact 있는 영상으로 LongSplat 실행 → baseline
-- **Un-weathered Input**: 2D Refinement 적용 후 LongSplat 실행 → ours
-### (1) PSNR (렌더링 결과 기준)
-- 3가지 조건의 LongSplat 렌더링 결과를 GT(Raw)를 기준으로 계산
-- 목표: Un-weathered의 PSNR이 Weathered 대비 유의미하게 향상되고 Raw에 근접시키는 것
-### (2) Camera Pose 정확도
-- LongSplat이 추정한 Camera Pose를 GT Pose와 비교
-- ATE (Absolute Trajectory Error) / RTE (Relative Translation Error)
-- 동일하게 Raw / Weathered / Un-weathered 3가지 조건에서 비교
+# 3. Result Analysis
+### Metrics
+- **PSNR (Peak Signal-to-Noise Ratio):** 픽셀 값 차이를 기반으로 원본과의 오차 비율을 측정합니다 (값이 클수록 우수). 날씨 파티클이 3D 형상으로 복원되어버린 악천후(Weathered) 결과와 전처리 결과의 품질 차이를 직관적으로 보여줍니다.
+- **SSIM (Structural Similarity Index Measure):** 두 이미지의 구조(윤곽, 패턴), 밝기, 대비가 유사한 정도를 0~1 사이로 측정합니다 (1에 가까울수록 우수).
+- **LPIPS (Learned Perceptual Image Patch Similarity):** 딥러닝(CNN) 기반 특징 맵을 활용하여 사람이 시각적으로 느끼는 인지적 유사도를 측정합니다 (값이 작을수록 우수). 2D 전처리 후 남아있는 미세한 얼룩이나 아티팩트를 잡아내는 데 유리합니다.
+- **ATE (Absolute Trajectory Error):** 추정된 전체 카메라 궤적이 GT 궤적(맑은 날씨에서 COLMAP이 추출한 궤적 등)과 절대적으로 얼마나 일치하는지 측정합니다.
+- **RTE (Relative Translation Error) / RPE (Relative Pose Error):** 인접한 프레임 간의 상대적인 이동 및 회전 오차를 측정하여, 궤적이 미세하게 튀거나 누적 오차(Drift)가 발생하는지 확인합니다.
+### (1) 악천후에 따른 파이프라인 별 취약성 대조 (A2 vs. B2)
+- **비교 중점:** 3D 파이프라인 진입 전 존재하는 날씨 노이즈가 각 모델에 어떠한 형태의 붕괴를 유발하는지 대조합니다.
+- **ATE / RTE:** 전통적 SfM 기반(Posed)인 A2에서 특징점 매칭 실패로 인한 카메라 궤적 추정 붕괴(Tracking loss) 현상을 측정합니다.
+- **PSNR / LPIPS:** Unposed 방식인 B2에서 날씨 아티팩트가 3D 공간의 기하학적 요소로 복원됨에 따라 발생하는 시각적 품질 저하를 원본(B1)과 비교하여 측정합니다
+### (2) 2D 전처리의 도입 효과와 한계 분석 (A2 vs. A3, B2 vs. B3)
+- **비교 중점:** 2D 전처리의 도입이 각 파이프라인의 성능을 얼마나 향상시키며, 성능 상한선(Raw 영상)에 얼마나 근접하게 만드는지 분석합니다.
+- **ATE / RTE (A2 vs A3):** 2D 전처리를 거친 후 전통적 SfM(COLMAP)이 포즈 추정 기능을 회복할 수 있는지, 회복하더라도 다중 시점 불일치로 인한 잔여 오차가 얼마나 남는지 평가합니다.
+- **PSNR / SSIM / LPIPS (B2 vs B3):** 전처리된 이미지를 사용했을 때 Unposed 3DGS의 렌더링 품질 상승 폭을 측정하고, 이 수치가 이상적 환경인 B1의 수치에 얼마나 근접하는지 확인합니다.
+### (3) 시점 불일치(Multi-view Inconsistency)에 대한 대응력 비교 (A3 vs. B3)
+- **비교 중점:** 2D 전처리 모델을 거친 악천후 영상을 수용하고 처리하는 두 파이프라인 간의 메커니즘 차이와 안정성을 대조합니다.
+- **ATE / RTE:** 2D 복원 오차가 단방향 파이프라인인 A3의 카메라 궤적에 미치는 누적 오차와, 결합 최적화(Joint Optimization)를 수행하는 B3가 궤적을 보정해 내는 능력을 비교합니다.
+- **PSNR / SSIM / LPIPS:** 궤적이 고정된 상태로 렌더링을 시도하는 A3와, 포즈와 형상을 동시에 최적화한 B3의 렌더링 결과물 간 기하학적 일관성 및 정량적 품질(PSNR, SSIM, LPIPS) 차이를 중점적으로 분석합니다.
