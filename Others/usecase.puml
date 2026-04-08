@@ -1,0 +1,64 @@
+@startuml
+left to right direction
+
+actor "Autonomous Driving Researcher" as Researcher
+actor "Autonomous System" as System
+actor "Company / User" as Company
+
+rectangle "Weather Robust 3D Vision System" {
+
+  (Develop Robust 3DOD in Adverse Weather) as UC1
+  (Reconstruct 3D Scene in Weather) as UC3
+  (Evaluate Weather Benchmark) as UC4
+
+  ' --- UC1 상세 (통합된 Night/Rain + Snow) ---
+  (Input Adverse Weather Data) as UC1_1
+  (Evaluate Baseline 3DOD) as UC1_2
+  (Analyze Performance Degradation) as UC1_3
+  (Apply Robust Techniques: KD, Augmentation, Fusion) as UC1_4
+  (Re-evaluate Improved Model) as UC1_5
+  (Deploy Optimized Model) as UC1_6
+
+  UC1 --> UC1_1 : <<include>>
+  UC1 --> UC1_2 : <<include>>
+  UC1 --> UC1_3 : <<include>>
+  UC1 --> UC1_4 : <<include>>
+  UC1 --> UC1_5 : <<include>>
+  UC1 --> UC1_6 : <<include>>
+
+  ' --- UC3 상세 ---
+  (Input Weather-corrupted Images) as UC3_1
+  (Run LongSplat) as UC3_2
+  (Analyze Reconstruction Drop) as UC3_3
+  (Apply 2D Refinement) as UC3_4
+  (Evaluate Quality Improvement) as UC3_5
+
+  UC3 --> UC3_1 : <<include>>
+  UC3 --> UC3_2 : <<include>>
+  UC3 --> UC3_3 : <<include>>
+  UC3 --> UC3_4 : <<include>>
+  UC3 --> UC3_5 : <<include>>
+
+  ' --- UC4 상세 ---
+  (Input Weather Dataset) as UC4_1
+  (Select Models) as UC4_2
+  (Run Evaluation) as UC4_3
+  (Visualize Results) as UC4_4
+
+  UC4 --> UC4_1 : <<include>>
+  UC4 --> UC4_2 : <<include>>
+  UC4 --> UC4_3 : <<include>>
+  UC4 --> UC4_4 : <<include>>
+
+  ' --- Actor 연결 ---
+  Researcher --> UC1
+  Researcher --> UC3
+  Researcher --> UC4
+
+  System --> UC1
+  System --> UC3
+
+  Company --> UC4
+}
+
+@enduml
