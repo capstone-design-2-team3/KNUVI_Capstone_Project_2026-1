@@ -1,4 +1,4 @@
-> 주제: Posed vs. Unposed 3DGS의 날씨 민감도 및 2D 전처리 의존성 비교 분석
+> 주제: Posed vs. Unposed 3DGS의 날씨 민감도 및 2D 전처리 결합 효과 비교 분석
 > 향후 발전 방향: 비정형 긴 궤적(Casual Long Videos) 환경에서의 악천후 3D 복원 연구 (Unposed 3DGS 중점)
 
 악천후라는 변수와 2D 전처리 과정이 '포즈 추정 기반(Posed)'과 '포즈-형상 결합 최적화(Unposed)'라는 두 가지 3DGS 패러다임에 각각 어떤 식으로 작용하는지 대조하는 실험
