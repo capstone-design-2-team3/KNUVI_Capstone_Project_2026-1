@@ -1,48 +1,58 @@
-# 3DGS 실외 악천후 환경 복원 연구 (Capstone Project 2026-1)
+# 3DGS 실외 악천후 환경 복원 및 포즈 추정 강건성 연구 (Capstone 2026-1)
 
-본 디렉토리는 2026년 하계 학술대회(방미공) 제출을 목표로 하는 **"카메라 포즈 정보가 없는 악천후 환경(Unposed 3DGS)을 위한 2D 전처리 기반 3DGS 파이프라인"** 연구를 위한 종합 작업 공간입니다.
+본 디렉토리는 **"비정형 긴 궤적(Casual Long Videos) 환경에서 2D 전처리(MWFormer)와 Unposed 3DGS(LongSplat)의 결합이 악천후 하의 포즈 추정 및 3D 복원에 미치는 영향"**을 분석하는 연구 공간입니다.
 
-## 📌 연구 요약 (Project Overview)
-- **주제**: 비정형 긴 궤적(Casual Long Videos) 환경에서의 악천후 3D 복원 연구
-- **문제점**: 실외 악조건(눈, 비 등)에서는 기존 3DGS 파이프라인의 특징점 매칭 및 카메라 포즈 추정(SfM, COLMAP 등)이 실패하여 3D 재구성 자체가 붕괴됨. 기존 악천후 3DGS 연구는 이미 포즈가 추출된 환경(Known Poses)만을 가정하는 한계가 있음.
-- **해결 방안**: 포즈 정보가 주어지지 않는 **Unposed 3DGS(LongSplat)** 환경에서, 3D 파이프라인 진입 전 **날씨 열화 인지형 트랜스포머(MWFormer)**를 활용한 2D 이미지 복원 전처리(Pre-processing)를 선제적으로 진행.
-- **기대 효과**: 포즈 추정의 붕괴 방지 및 시점 불일치(Multi-view Inconsistency) 등 전처리 한계를 모델 최적화(Joint Optimization)로 극복함으로써, 결과적으로 카메라 포즈 정확도(ATE/RTE) 및 3D 렌더링 품질(PSNR) 대폭 개선.
-
-## 📂 디렉토리 구조 (Directory Structure)
-
-### 1. `1_Model_test/`
-모델 구동 테스트 및 관련 기술 조사가 포함되어 있습니다.
-- **LongSplat / WeatherGS**: Unposed 3DGS 베이스라인 모델 및 기존 악천후 3DGS 기술 테스트, 로그 정리 (`LongSplat Setting.md`, `WeatherGS_test.ipynb` 등).
-- **2D Refinement**: MWFormer 등 딥퓨전 기반의 2D 이미지 단일/복합 악천후 제거 트랜스포머 모델 탐색 요약 (`2D_Refinement_Model_Research.md`).
-
-### 2. `2_Related_Work/`
-연구 배경 조사를 위한 관련 논문 및 리포트들이 정리되어 있습니다.
-- **조사 내용**: 3DGS 기반 실외 데이터셋 조사 내역, NVS/NeRF 발전 동향, Posed/Unposed 3DGS의 최신 동향 및 모델 조사 보고서.
-
-### 3. `3_Experiment/`
-구체적인 실험 계획 수립 및 벤치마킹 진행 로그가 기록되어 있습니다.
-- **`1_Experiment_Plan.md`**: 데이터셋 변인(Raw, Weathered, Un-weathered) 및 파이프라인 대조군(Case A: Posed 3DGS vs Case B: Unposed 3DGS) 기반의 양방향 실험 설계. 평가 지표(PSNR, LPIPS, ATE 등)와 가설 검증 방법론 상세 기재.
-- **`2_Experiment_Log.md`**: 실험 진행 상황 및 결과 수치 추적 기록장.
-
-### 4. `4_Paper_Writing/`
-논문 투고를 위한 초안(Draft) 및 시각 자료(Figure) 작업 공간입니다.
-- **`0_3DGS_Draft.md`**: 논문 초록(Abstract) 및 서론(Introduction) 등 본문 작성 중인 문서.
-- **`3DGS_Main_Figure.pptx`**: 논문 핵심 다이어그램 및 제안 방법 파이프라인 구성도.
+## 📌 연구 핵심 가설 (Hypothesis)
+1. **Posed 3DGS(COLMAP)**는 악천후 노이즈로 인한 특징점 매칭 실패로 카메라 포즈 추정이 붕괴될 것이다.
+2. **2D 전처리(MWFormer)**는 이미지를 정화하여 포즈 추정 기능을 회복시키지만, 시점 간 불일치(Multi-view Inconsistency)라는 새로운 오차를 유발할 수 있다.
+3. **Unposed 3DGS(LongSplat)**의 포즈-형상 결합 최적화(Joint Optimization)는 이러한 전처리 오차를 스스로 보정하여 가장 높은 복원 성능을 보일 것이다.
 
 ---
 
-## 🚀 실험 계획 요약 (Experiment Design)
-본 프로젝트는 다음 3가지 데이터 조건을 2가지 방식에 각각 주입해 상호 비교합니다.
+## 📂 실험 설계 (Experiment Design)
 
-1. **테스트 데이터 (Variables)**
-   - `Raw` (맑은 원본 영상: Upper Bound 확인용)
-   - `Weathered` (악천후 합성 영상: 붕괴 기준선 확인용)
-   - `Un-weathered` (2D 전처리 제거 후 영상: 제안 방식 및 한계 극복 확인용)
+### 1. 입력 데이터 변수 (Data Variables)
+- **Raw (원본)**: 날씨 노이즈가 없는 맑은 영상 (성능 상한선: Upper Bound 확인용)
+- **Weathered (악천후)**: WeatherEdit으로 합성된 비, 눈 아티팩트가 포함된 영상 (붕괴 기준선: Baseline 확인용)
+- **Un-weathered (전처리)**: **MWFormer**를 통해 악천후 요소를 제거한 영상 (전처리 효과 및 오차 확인용)
+*대상 데이터셋: **Free Dataset** (F2-NeRF 제공 7개 씬 기반 비정형 궤적 데이터)*
 
-2. **비교 파이프라인 (Methods)**
-   - `Case A`: 전통적 SfM 궤적 기반 `Posed 3DGS (COLMAP)`
-   - `Case B`: 궤적 및 형상 결합 최적화 기반 `Unposed 3DGS (LongSplat)`
+### 2. 파이프라인 대조군 (Comparison Cases)
 
-3. **주요 평가지표 (Metrics)**
-   - 렌더링 시각 품질: `PSNR`, `SSIM`, `LPIPS`
-   - 카메라 궤적 오류 측정: `ATE` (절대 오차), `RTE` (상대 이동 오차)
+#### Case A. Posed 3DGS (COLMAP + 일반 3DGS)
+전통적인 SfM 기반의 순차적 파이프라인이 날씨 노이즈와 전처리 오차에 어떻게 반응하는지 확인합니다.
+- **A1 (Raw + Posed)**: 최적 환경 기준 성능 측정
+- **A2 (Weathered + Posed)**: 특징점 매칭 실패 및 카메라 궤적 붕괴(Tracking Loss) 지점 관찰
+- **A3 (Un-weathered + Posed)**: 전처리 후 이미지 정화가 포즈 정확도 회복에 미치는 영향 분석
+
+#### Case B. Unposed 3DGS (LongSplat)
+포즈와 형상을 동시에 최적화하는 결합 방식의 대응력을 확인합니다.
+- **B1 (Raw + Unposed)**: Unposed 방식의 기준 성능 측정
+- **B2 (Weathered + Unposed)**: 날씨 입자가 가우시안 형상으로 직접 복원되며 발생하는 렌더링 품질 저하 분석
+- **B3 (Un-weathered + Unposed)**: **결합 최적화 과정이 전처리의 한계(시점 불일치)를 보정해 내는 능력(핵심 지표)** 관찰
+
+---
+
+## 🛠 핵심 모델 및 분석 도구
+
+### 2D 복원: MWFormer (TIP 2025)
+- **메커니즘**: 하이퍼 네트워크(Hyper-network)와 FiLM을 사용하여 날씨 열화 상태에 따라 파라미터를 동적으로 변조.
+- **장점**: 단일 및 복합 날씨(비+눈 등)에 대해 재학습 없이 유연한 복원 가능.
+
+### 평가지표 (Metrics)
+- **시각적 품질**: `PSNR`, `SSIM`, `LPIPS` (인지적 유사도 측정에 중점)
+- **포즈 정확도**: `ATE` (절대 궤적 오차), `RTE/RPE` (상대 이동/포즈 오차)
+
+---
+
+## 📈 분석 전략 (Analysis Strategy)
+1. **A2 vs. B2 (날씨 민감도 대조)**: 특징점 기반(SfM) 붕괴와 형상 기반(Optimization) 품질 저하의 양상 비교.
+2. **A2 vs. A3, B2 vs. B3 (전처리 도입 효과)**: 2D 전처리가 각 모델의 성능 상한선(Raw)에 얼마나 가깝게 회복시키는지 분석.
+3. **A3 vs. B3 (시점 불일치 대응력)**: 2D 전처리 오차가 고정 포즈(Posed) 모델과 가변 포즈(Unposed) 모델의 기하학적 일관성에 미치는 영향 대조.
+
+---
+
+## 📂 디렉토리 가이드
+- `1_Model_test/`: LongSplat 설정 및 모델별 사전 테스트 로그
+- `3_Experiment/`: 상세 실험 계획(`1_Experiment_Plan.md`) 및 결과 수치(`2_Experiment_Log.md`)
+- `4_Paper_Writing/`: 논문 초안 및 핵심 Figure (방미공 '26 투고용)

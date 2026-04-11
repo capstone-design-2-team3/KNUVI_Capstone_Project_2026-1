@@ -1,67 +1,29 @@
-# 실험 진행 체크리스트
+# 📊 실험 진행 로그 (Experiment Log)
 
-## 1) 공통 환경 세팅
-- [] Posed 3DGS 및 COLMAP 환경 세팅.
-- [] Unposed 3DGS(LongSplat) 환경 세팅.
-- [] MWFormer inference 환경 세팅.
+## 🛠 Weathered Free dataset 구축 완료 - [2026-04-11]
+**연구 주제**: 비정형 긴 궤적(Casual Long Videos) 환경에서의 악천후 3D 복원 (Free Dataset)
 
-## 2) 데이터 준비
-### 2-1. Free Dataset
-- [x] Free Dataset Weathered (WeatherEdit 합성본) 폴더 정리.
-- [] Free Dataset Un-weathered (MWFormer 결과) 폴더 정리.
-- [] Weathered / Un-weathered 씬/프레임 개수 일치 여부 확인.  
+### 1. 구축 전략 (Data Preparation Strategy)
+- **대상**: F2-NeRF `Free Dataset` 7개 씬 (비정형 궤적)
+- **악천후 합성**: `WeatherEdit`을 활용한 비(Rain) 및 눈(Snow) 레이어 합성 데이터.
+- **데이터 정제 단계**:
+  1. **중복 및 과다 데이터 제거**: 정렬된 목록 기준 매 3번째 이미지(00158, 00161, ...)를 삭제하여 1차 정제.
+  2. **개수 최적화 (Max 200장)**: 3DGS 최적화 효율 및 일관된 비교를 위해, 200장이 넘는 씬은 균등하게(Evenly spaced) 샘플링하여 정확히 **200장**으로 제한.
+- **결과**: 전체 카메라 궤적의 커버리지는 유지하면서 연산 부하를 줄인 최적의 실험 데이터셋 확보.
 
-### 2-2. WeatherGS Dataset (보류)
-- [] WeatherGS Weathered 정리.  
-- [] WeatherGS Un-weathered 정리.  
-- [] 씬별 meta 정보(해상도, 프레임 수) 정리.  
+### 2. 최종 데이터셋 현황 (Final Inventory)
+| Scene Group | Rain (Images) | Snow (Images) | Status |
+| :--- | :---: | :---: | :--- |
+| **Grass** | 197 | 197 | ✅ Ready |
+| **Hydrant** | 141 | 141 | ✅ Ready |
+| **Pillar** | 200 | 200 | ✅ Ready |
+| **Road** | 200 | 200 | ✅ Ready |
+| **Sky** | 200 | 200 | ✅ Ready |
+| **Stair** | 200 | 200 | ✅ Ready |
 
-## 3) 2D 전처리 단계
-- [] WeatherEdit로 Free Dataset에 눈/비 + severity(약 3단계) 세팅 후 Weathered 생성.
-- [] MWFormer로 Weathered → Un-weathered inference 실행. (주저자)
-- [] 전/후 프레임 샘플 시각 점검 (색감, 잔여 노이즈, 경계 깨짐).  
-- [] Multi-view inconsistency 의심되는 샘플 따로 리스트업.
+### 3. 산출물 (Artifacts)
+- 각 디렉토리 내 정제된 이미지 파일 (`00xxx.png`)
+- 각 디렉토리별 최종 선택된 이미지 번호 기록 (`{Scene}_indices.txt`)
 
-## 4) Posed 3DGS (Case A2, A3)
-### 4-1. A2: Weathered + Posed
-- [] COLMAP에 Free Dataset Weathered 입력, 포즈 추정 실행.
-- [] Feature match 실패/트래킹 로스트가 발생한 씬 기록.
-- [] COLMAP 포즈 결과를 이용해 3DGS train 실행.  
-- [] 평가 렌더링 생성 (Free / WeatherGS 공통 포즈 기준).  
-- [] PSNR / SSIM / LPIPS / ATE / RTE 계산.
-- [] “날씨로 인한 SfM 붕괴 패턴” 메모.
-
-### 4-2. A3: Un-weathered + Posed
-- [] Free Dataset Un-weathered로 COLMAP 포즈 추정 재실행.
-- [] A2 대비 포즈 품질(ATE/RTE) 얼마나 회복되는지 계산.
-- [] 같은 포즈로 3DGS train 실행.  
-- [] 평가 렌더링 생성 및 저장.
-- [] PSNR / SSIM / LPIPS, A2 대비 성능 개선량 정리.
-- [] 시점 불일치가 남아서 생긴 아티팩트 사례 캡처.
-
-## 5) Unposed 3DGS (Case B2, B3)
-### 5-1. B2: Weathered + Unposed
-- [] LongSplat에 Free Dataset Weathered 입력 후 train.
-- [] 날씨 입자(눈/비/안개)가 3D 가우시안으로 어떻게 복원되는지 샘플 확인.
-- [] 렌더링 결과 저장.  
-- [] PSNR / SSIM / LPIPS 계산.
-- [] “악천후 → 기하학 오염 패턴” 메모.
-
-### 5-2. B3: Un-weathered + Unposed
-- [] LongSplat에 Free Dataset Un-weathered 입력 후 train.
-- [] B2 대비 품질 상승 여부 시각적으로 확인.
-- [] PSNR / SSIM / LPIPS 계산, B2와 차이 정리.
-- [] 시점 불일치가 있는 입력을 LongSplat이 어느 정도 보정하는지 관찰 메모.
-
-## 6) WeatherGS Dataset에 동일 파이프라인 적용
-- [] WeatherGS Weathered로 A2, B2 절차 축약 실행.
-- [] WeatherGS Un-weathered로 A3, B3 절차 축약 실행.
-- [] Free Dataset 결과와 경향一致/불일치 포인트 메모.  
-
-## 7) 결과 취합 및 분석
-- [] 씬 × 케이스(A2, A3, B2, B3)별 metric csv 정리.
-- [] A2 vs B2: 악천후에 대한 취약성 비교 그래프/표 생성.
-- [] A2 vs A3, B2 vs B3: 전처리 도입 효과 시각화.
-- [] A3 vs B3: 시점 불일치 수용 능력 비교 그래프/코멘트 작성.
-- [] 대표 성공/실패 렌더링 이미지 모아서 figure 후보 폴더 구성.  
-- [] 실험 로그, 하이퍼파라미터, 버전 정보 정리.  
+---
+**다음 단계**: 각 데이터셋에 대해 `Posed 3DGS (COLMAP)` 및 `Unposed 3DGS (LongSplat)` 베이스라인 측정 및 `MWFormer` 전처리 성능 비교.
