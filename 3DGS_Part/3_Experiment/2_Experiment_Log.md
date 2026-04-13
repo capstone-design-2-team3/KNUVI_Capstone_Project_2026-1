@@ -39,3 +39,55 @@
 
 ---
 **다음 단계**: 각 데이터셋에 대해 `Posed 3DGS (COLMAP)` 및 `Unposed 3DGS (LongSplat)` 베이스라인 측정 및 `MWFormer` 전처리 성능 비교.
+
+
+## 3D Reconstruction 진행
+
+### 1. Posed 3DGS (COLMAP)
+- grass : 
+- hydrant : done
+- pillar : done
+- road : 
+- sky : done
+- stair : done
+
+#### Issue
+
+Posed 3DGS와 Unposed(LongSplat)의 reconstruction 성능을 PSNR로 비교해야 하는데, 두 모델의 출력 이미지가 서로 다른 좌표계에 있음
+
+- **Posed 3DGS**: COLMAP undistortion 과정을 거친 이미지로 학습 → output이 undistorted 좌표계
+- **Unposed LongSplat**: raw 이미지 그대로 학습 → output이 raw 좌표계
+- **GT(clean 이미지)**: raw 좌표계
+
+따라서 해상도도 다르고, 왜곡 보정 여부도 달라서 세 이미지가 픽셀 단위로 대응되지 않음.
+
+1. Raw GT로 통일
+- Posed output → `cv2.remap`으로 역변환 → raw 좌표계 복원
+- Unposed output → resize
+- GT → clean raw 이미지 resize
+- 단점: 역변환 구현 번거로움, 역변환 시 품질 손실 가능
+
+2. Undistorted GT로 통일
+- Posed output → 바로 PSNR
+- Unposed output → resize + `cv2.undistort` 적용
+- GT → clean undistorted 이미지
+- 단점: Unposed output에 왜곡 보정 적용이 부자연스러움
+
+3. 각자 다른 GT, 직접 비교 포기
+- Posed → undistorted GT로 PSNR
+- Unposed → raw GT로 PSNR
+- 단점: 두 수치를 직접 비교할 수 없어 실험 설득력 약함
+
+4. COLMAP undistortion 과정을 거치지 않고 학습
+- 간단하지만 3DGS가 왜곡된 이미지로 학습하게 되어 reconstruction 성능 저하 가능성
+
+5. Raw, Posed output, Unposed output 모두 resize만 진행
+- 간단하지만 어느 쪽을 잘라야 하는지 애매하고, Posed output의 경우 왜곡 보정으로 인한 불공정한 PSNR 수치 감소 우려
+
+### 2. Unposed 3DGS (LongSplat)
+- grass
+- hydrant
+- pillar
+- road
+- sky
+- stair
