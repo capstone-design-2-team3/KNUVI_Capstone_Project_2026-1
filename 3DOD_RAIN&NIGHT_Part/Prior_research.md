@@ -379,3 +379,176 @@
   * sensor drop augmentation(LiDAR 또는 카메라를 1/3 확률로 완전히 제거) 적용
 * **평가 데이터:**
   * nuScenes validation set (150개 scene)
+
+---
+
+
+# Night-time Robust Multi-Modal 3D Object Detection
+
+## 1. LLIE 기반 접근 (Low-Light Image Enhancement)
+
+
+| 논문명 | 학회 / 연도 | 타겟 환경 | 핵심 기술 | 한 줄 요약 |
+|--------|------------|-----------|-----------|-----------|
+| Light the Night | CVPR 2024 | 야간 (저조도) | Multi-Condition Diffusion | 멀티 조건 제어 diffusion 기반 LLIE, 3DOD까지 고려한 거의 유일한 사례 |
+| AllWeatherNet | ICPR 2024 | 야간, 눈, 비, 안개 | Hierarchical Info + SIAM Attention | 다양한 악천후를 통합적으로 복원하는 범용 이미지 enhancement 모델 (camera 3DOD) |
+
+
+### 주요 논문 정리
+
+#### 1. Light the Night (CVPR 2024)
+
+* 자율주행 환경에 특화된 **Diffusion 기반 LLIE 프레임워크**
+* 입력 조건:
+
+  * 이미지
+  * depth map
+  * 텍스트
+* **Multi-condition adapter + controlled diffusion**
+* **3DOD까지 고려한 LLIE 연구는 사실상 이 논문이 유일**
+
+---
+
+#### 2. AllWeatherNet (ICPR 2024)
+
+* 다양한 악천후(야간, 눈, 비, 안개)를 **통합적으로 처리**
+* 구조:
+
+  * Scene level
+  * Object level
+  * Texture level
+* **SIAM (illumination-aware attention)** 적용
+* 자율주행 perception에 중요한 영역 중심 복원
+
+---
+
+## 2. LLIE 기반 2D Object Detection
+
+
+| 논문명 | 학회 / 연도 | 타겟 환경 | 사용 센서 | 핵심 방식 |
+|--------|------------|-----------|-----------|-----------|
+| PE-YOLO | arXiv 2023 | 저조도 (야간) | Camera | Laplacian pyramid 기반 enhancement + detection joint 학습 |
+| YOLA | arXiv 2024 | 저조도 (야간) | Camera | 조명 불변 feature 학습 (LLIE 성능 저하 문제 해결) |
+
+
+### 핵심 인사이트
+
+* **YOLA**
+
+  * 기존 LLIE(Zero-DCE, EnlightenGAN 등)를 적용하면
+    **오히려 detection 성능이 감소**
+  * 이유:
+
+    * LLIE는 **사람 시각 기준(PSNR, SSIM)** 최적화
+    * Detection에 필요한 feature와 불일치
+
+---
+
+## 3. LLIE 없이 야간 멀티모달 3DOD 개선
+
+
+| 기술 분류 | 논문명 | 학회 / 연도 | 타겟 환경 | 센서 | 핵심 방법 |
+|----------|--------|------------|-----------|------|----------|
+| 상호 보완 / 노이즈 제거 | Bidirectional enhancement | Visual Computer 2025 | 저조도 | LiDAR + Camera | KNN + Cross-attention + Spatial encoder로 노이즈 억제 |
+|  | Complementary Fusion | IEEE 2024 | 야간, 저대비 | LiDAR + Camera | 병렬 느슨한 결합 + luminance map 기반 라이다 보정 |
+| 동적 융합 | ContextualFusion | IEEE 2024 | 야간, 우천 | LiDAR + Camera | Gated convolution으로 센서 가중치 동적 조절 |
+|  | SAMFusion | ECCV 2024 | 야간, 눈, 안개 | LiDAR + Camera + NIR + Radar | BEV 기반 distance-aware adaptive fusion |
+|  | MEFormer | arXiv 2024 | 야간, 센서 오류 | LiDAR + Camera | Modality-agnostic decoding + adaptive ensemble |
+| 데이터 증강 | PointrendPainting | ICCC 2023 | 야간 | LiDAR + Camera | Early fusion + CycleGAN 기반 야간 데이터 생성 |
+| 기타 | Robust Multimodal 3DOD | Springer 2026 | 악천후 전반 | LiDAR + Camera | Feature mismatch 해결 + robust fusion |
+
+
+---
+
+## 4. 주요 논문 핵심 요약
+
+### Complementary Fusion (IEEE 2024)
+
+* TransFusion 기반 확장
+* **Bimodal parallel loose coupling**
+* 핵심 모듈:
+
+  * Semantic-spatial transfer
+  * Luminance saliency map
+    라이다 오염 시 카메라로 보완
+
+---
+
+### Bidirectional Enhancement (2025)
+
+* 문제: 저조도에서 특정 모달 의존성 증가
+* 해결:
+
+  * KNN 기반 feature 보완
+  * Cross-attention alignment
+  * Spatial encoder → 노이즈 제거
+
+---
+
+### ContextualFusion (IEEE 2024)
+
+* **환경별 센서 중요도 다름**
+* 해결:
+
+  * Gated convolution 기반 dynamic fusion
+* 추가:
+
+  * CARLA 기반 AdverseOp3D dataset 구축
+
+---
+
+### SAMFusion (ECCV 2024)
+
+* 다양한 센서 통합:
+
+  * RGB / LiDAR / NIR / Radar
+* BEV 공간에서:
+
+  * 거리
+  * 가시성
+    → 기준으로 adaptive weighting
+
+---
+
+### MEFormer (arXiv 2024)
+
+* 문제: LiDAR 과의존
+* 해결:
+
+  * MOAD (modality-agnostic decoder)
+  * PME (adaptive ensemble)
+    센서 결함에도 강건
+
+---
+
+### PointrendPainting (ICCC 2023)
+
+* Early fusion 전략
+* Pointrend 활용:
+
+  * Occlusion 대응
+* CycleGAN:
+
+  * 야간 데이터 생성
+
+---
+
+## 5. 결론 (핵심 인사이트)
+
+---
+
+### 제안 가능 방향 (차별성)
+
+> **LLIE + Quality-aware Routing**
+
+* LLIE를 단순 전처리가 아닌:
+
+  * **품질 기반 선택적 활용**
+* 예:
+
+  * 밝기/노이즈 수준에 따라
+  * LLIE 적용 여부 또는 fusion weight 조절
+
+기존 연구에서 **다루어지지 않은 영역 → 차별성 확보 가능**
+
+---
