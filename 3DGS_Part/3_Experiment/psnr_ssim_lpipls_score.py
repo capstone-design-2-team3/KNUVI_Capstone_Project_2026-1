@@ -1,4 +1,6 @@
 # python3 psnr_ssim_lpipls_score.py --gt_dir gt --pred_dir pred --multi_compare --output_csv results.csv
+# python3 psnr_ssim_lpipls_score.py --source_txt personal/source.txt
+
 
 import os
 import numpy as np
