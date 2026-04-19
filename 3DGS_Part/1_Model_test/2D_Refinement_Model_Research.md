@@ -1,6 +1,6 @@
 # Model Search
 
-- 딥퓨전 기반의, Weather Artifact를 제거할 수 있는 2D Refinement 모델 찾기
+- Weather Artifact를 제거할 수 있는 2D Refinement 모델 찾기
 - Google Scholar Quary : multiple adverse weather conditions  "image restoration"
 - 아래 세 모델 모두 Pretrained weight 제공
 
