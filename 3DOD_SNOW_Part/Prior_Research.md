@@ -141,6 +141,7 @@
 * **Sensor fusion evolution**
 
   * LiDAR only → LiDAR + Camera
+  * → LiDAR + Radar (robust perception)
  
 
 ## Point Cloud Completion & Augmentation Papers
@@ -166,7 +167,6 @@
 | FSC: Few-point Shape Completion | CVPR 2024 |  | ShapeNet, KITTI, PCN | **extreme sparse 대응 dual-branch + multi-stage refinement** | LiDAR + Image |
 | SPU-IMR: Iterative Mask-Recovery Upsampling | AAAI 2025 |  | SAPCU | **iterative mask recovery + patch merging**으로 dense reconstruction | LiDAR |
 | MoDAR: Motion Forecasting for 3DOD | CVPR 2023 | X | Waymo | **motion forecasting 기반 virtual point 생성** | LiDAR + Temporal |
-  * → LiDAR + Radar (robust perception)
 
 ---
 
