@@ -141,6 +141,31 @@
 * **Sensor fusion evolution**
 
   * LiDAR only → LiDAR + Camera
+ 
+
+## Point Cloud Completion & Augmentation Papers
+
+| Title | Venue | Code | Dataset | Method Summary (KR + Key EN) | Modality |
+|------|------|------|--------|-----------------------------|----------|
+| Object Detection of Occlusion Point Cloud based on Transformer | IJCNN 2023 | X | KITTI, Waymo | 가려진 포인트 클라우드를 입력으로 받아 **Transformer 기반 shape completion**으로 누락된 포인트를 복원 | LiDAR |
+| Improving 3D Vulnerable Road User Detection With Point Augmentation | IEEE 2023 | X | KITTI, Waymo | proposal 영역에서 **geometric symmetry 기반 fictional point 생성**으로 sparse 문제 완화 | LiDAR |
+| PG-RCNN: Semantic Surface Point Generation for 3D Object Detection | ICCV 2023 |  | KITTI | RoI 내 문맥을 활용해 **semantic-aware surface point generation** 수행 | LiDAR |
+| SIANet: 3D Object Detection with Structural Information Augment Network | IET 2024 | X | KITTI, Waymo | RoI 객체의 구조를 재구성하는 **structure reconstruction + feature fusion** | LiDAR |
+| CRA-PCN: Point Cloud Completion with Cross-Resolution Transformers | AAAI 2024 |  | PCN, ShapeNet, MVP | **cross-resolution Transformer + coarse-to-fine upsampling**으로 점진적 복원 | LiDAR |
+| AnchorFormer: Point Cloud Completion From Discriminative Nodes | CVPR 2023 |  | PCN, ShapeNet, KITTI | **learned anchor 확장 + 2D grid deformation**으로 missing point 생성 | LiDAR |
+| SVDFormer: Self-view Augmentation and Dual-generator | ICCV 2023 |  | PCN, ShapeNet, KITTI, ScanNet | **multi-view depth + dual-generator (global + structure)** 기반 복원 | LiDAR + Image |
+| PointSea: Self-structure Augmentation for Completion | IJCV 2025 |  | ShapeNet, PCN, KITTI, ScanNet, Matterport3D | **self-projected depth + dual-generator refinement**로 구조 보완 | LiDAR + Image |
+| CP3: Pretrain-Prompt-Predict for Completion | IEEE 2023 |  | MVP, PCN | **IOI pretext task + prompt-based refinement**로 robust completion | LiDAR |
+| P2C: Self-Supervised Completion from Partial Clouds | ICCV 2023 |  | ShapeNet, ScanNet | **patch masking + structural prior learning**으로 self-supervised 복원 | LiDAR |
+| CSDN: Cross-Modal Shape-Transfer Dual-Refinement | TVCG 2024 |  | ShapeNet-ViPC | **image → shape transfer + graph refinement + global constraint** | LiDAR + Image |
+| PU-Mask: Point Cloud Upsampling via Virtual Mask | IEEE 2024 |  | PU1K, ModelNet40 | **mask-guided Transformer**로 hidden 영역 복원 후 upsampling | LiDAR |
+| Sparse Points to Dense Clouds | IEEE 2024 | X | KITTI, JackRabbot | **sparse LiDAR + single image fusion**으로 dense point reconstruction | LiDAR + Image |
+| VirtualPainting: Virtual Points for 3DOD | Sensors 2025 | X | KITTI, nuScenes | 이미지 기반 **virtual LiDAR point 생성 + semantic labeling** | LiDAR + Image |
+| Hyperspherical Embedding for Completion | CVPR 2023 |  | ModelNet40, ShapeNet, MVP, GraspNet | **hyperspherical embedding**으로 안정적인 feature 학습 후 복원 | LiDAR |
+| Implicit and Efficient Completion for Tracking | IEEE 2023 | X | KITTI, Waymo | **temporal information (previous frames)** 활용한 completion | LiDAR + Temporal |
+| FSC: Few-point Shape Completion | CVPR 2024 |  | ShapeNet, KITTI, PCN | **extreme sparse 대응 dual-branch + multi-stage refinement** | LiDAR + Image |
+| SPU-IMR: Iterative Mask-Recovery Upsampling | AAAI 2025 |  | SAPCU | **iterative mask recovery + patch merging**으로 dense reconstruction | LiDAR |
+| MoDAR: Motion Forecasting for 3DOD | CVPR 2023 | X | Waymo | **motion forecasting 기반 virtual point 생성** | LiDAR + Temporal |
   * → LiDAR + Radar (robust perception)
 
 ---
