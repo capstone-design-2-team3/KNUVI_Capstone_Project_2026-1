@@ -1,4 +1,7 @@
-## 전체 렌더링 결과 정성평가
+# 렌더링 결과 정량평가
+https://docs.google.com/spreadsheets/d/1LNpH7-7qnf_a4-fSCTedhi03bhy0TAYjm56Y217TrhM/edit?usp=sharing
+
+# 렌더링 결과 정성평가
 > 각 output별 test-render 이미지 시퀀스 검토
 > 메모 의미 : {모델}(프레임 수) : {낮은 퀄리티의 프레임 번호} / {기타 사항}
 
