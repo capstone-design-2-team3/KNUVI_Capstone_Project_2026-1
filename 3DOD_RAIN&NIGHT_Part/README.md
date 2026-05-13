@@ -1,4 +1,4 @@
-# 3DOD RAIN & NIGHT Part — Kyungjin
+# 3DOD RAIN & NIGHT Part
 
 ## 개요
 nuScenes 야간 데이터셋에서 LLIE(Low-Light Image Enhancement) 전처리가
