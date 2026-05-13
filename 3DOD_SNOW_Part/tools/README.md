@@ -1,4 +1,4 @@
-# main train&infer codes
+# train&infer codes with kitti dataset
 
 File structure
 ```
