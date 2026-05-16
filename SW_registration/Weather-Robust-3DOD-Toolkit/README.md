@@ -24,24 +24,43 @@ train → inference → analyzer → pipeline
 Weather-Robust-3DOD-Toolkit/
 
 ├── train.py
+
 ├── inference.py
+
 ├── analyzer.py
+
 ├── pipeline.py
+
 ├── requirements.txt
+
 │
+
 ├── training/
+
 │   ├── velodyne/
+
 │   ├── snow_velodyne/
+
 │   ├── label_2/
+
 │   └── calib/
+
 │
+
 ├── checkpoints/
+
 │   └── best_model.pth   (학습 후 생성)
+
 │
+
 ├── infer_velodyne/
+
 │   └── *.bin            (추론 결과 생성)
+
 │
+
 └── results/
+
     └── analysis.csv     (분석 결과 생성)
 
 
@@ -52,12 +71,17 @@ Weather-Robust-3DOD-Toolkit/
 본 코드는 KITTI format 데이터를 사용합니다.
 
 `training/` 폴더 아래 다음 구조로 데이터가 존재해야 합니다:
+
 training/
 
 ├── velodyne/        # 원본 LiDAR point cloud (.bin)
+
 ├── snow_velodyne/   # snow 환경 LiDAR input (.bin)
+
 ├── label_2/         # 3D bounding box annotation
+
 └── calib/           # camera-LiDAR calibration
+
 
 
 각 point cloud 파일 형식: x, y, z, intensity (float32)
@@ -137,18 +161,31 @@ python pipeline.py
 ## 7. 실행 흐름
 
 KITTI Dataset
+
     ↓
+
 train.py
+
     ↓
+
 best_model.pth
+
     ↓
+
 inference.py
+
     ↓
+
 dense point cloud (.bin)
+
     ↓
+
 analyzer.py
+
     ↓
+
 analysis.csv
+
 
 ---
 
