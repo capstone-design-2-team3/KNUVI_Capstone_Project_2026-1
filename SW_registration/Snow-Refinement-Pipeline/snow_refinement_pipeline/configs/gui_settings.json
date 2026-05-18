@@ -1,0 +1,13 @@
+{
+  "snow_root": "data/snow",
+  "output_root": "data/de_snow",
+  "raw_output_root": "outputs/mwformer_raw",
+  "mwformer_repo": "G:\\내 드라이브\\MWFormer_project\\MWFormer",
+  "backbone_path": "G:\\내 드라이브\\MWFormer_project\\weights\\extracted\\MWFormer_L\\backbone",
+  "style_filter_path": "G:\\내 드라이브\\MWFormer_project\\weights\\extracted\\MWFormer_L\\style_filter",
+  "device": "auto",
+  "batch_size": 1,
+  "num_workers": 0,
+  "max_side": 1024,
+  "size_multiple": 16
+}
