@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 520" role="img" aria-labelledby="title desc">
+<title id="title">Unified KNUVI research pipeline</title>
+<desc id="desc">The pipeline connects adverse weather data construction, restoration or completion, 3D object detection or 3DGS reconstruction, and performance analysis.</desc>
+<defs>
+  <marker id="arrow" markerWidth="9" markerHeight="9" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#38bdf8"/></marker>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1120"/><stop offset="1" stop-color="#13213c"/></linearGradient>
+</defs>
+<rect width="1280" height="520" rx="28" fill="url(#g)"/>
+<text x="60" y="72" fill="#f8fafc" font-size="35" font-family="Arial" font-weight="800">Unified pipeline across three case studies</text>
+<text x="62" y="108" fill="#bae6fd" font-size="18" font-family="Arial">Data construction → pre-processing or completion → model execution → metric analysis</text>
+<g font-family="Arial" font-size="19" text-anchor="middle">
+  <g transform="translate(60 170)">
+    <rect width="190" height="130" rx="20" fill="#e0f2fe"/><text x="95" y="53" fill="#082f49" font-weight="700">Base Data</text><text x="95" y="86" fill="#164e63" font-size="16">nuScenes / KITTI</text><text x="95" y="108" fill="#164e63" font-size="16">Free Dataset</text>
+  </g>
+  <path d="M260 235 H345" stroke="#38bdf8" stroke-width="4" marker-end="url(#arrow)"/>
+  <g transform="translate(360 170)">
+    <rect width="210" height="130" rx="20" fill="#dcfce7"/><text x="105" y="48" fill="#052e16" font-weight="700">Weather Data</text><text x="105" y="82" fill="#166534" font-size="16">Night filtering</text><text x="105" y="105" fill="#166534" font-size="16">Snow simulation / synthesis</text>
+  </g>
+  <path d="M580 235 H665" stroke="#38bdf8" stroke-width="4" marker-end="url(#arrow)"/>
+  <g transform="translate(680 170)">
+    <rect width="235" height="130" rx="20" fill="#ffedd5"/><text x="118" y="48" fill="#7c2d12" font-weight="700">Restoration</text><text x="118" y="82" fill="#9a3412" font-size="16">LLIE / point completion</text><text x="118" y="105" fill="#9a3412" font-size="16">MWFormer de-snow</text>
+  </g>
+  <path d="M925 235 H1010" stroke="#38bdf8" stroke-width="4" marker-end="url(#arrow)"/>
+  <g transform="translate(1025 170)">
+    <rect width="205" height="130" rx="20" fill="#ede9fe"/><text x="103" y="48" fill="#3b0764" font-weight="700">3D Models</text><text x="103" y="82" fill="#6b21a8" font-size="16">3DOD models</text><text x="103" y="105" fill="#6b21a8" font-size="16">3DGS / LongSplat</text>
+  </g>
+</g>
+<g transform="translate(120 355)" font-family="Arial">
+  <rect width="1040" height="90" rx="22" fill="#07111f" stroke="#334155"/>
+  <text x="40" y="38" fill="#f8fafc" font-size="21" font-weight="700">Final analysis</text>
+  <text x="40" y="66" fill="#cbd5e1" font-size="18">Detection AP/mAP, image quality, LiDAR point density, rendering quality, and camera pose accuracy are compared under clean, snow, de-snow, and night conditions.</text>
+</g>
+</svg>
