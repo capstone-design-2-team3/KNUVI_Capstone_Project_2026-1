@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KNUVI Capstone Project 2026-1 | Adverse Weather 3D Vision</title>
+  <meta name="description" content="Adverse weather robust 3D vision project page for 3D object detection and 3D Gaussian Splatting under snow and nighttime scenes." />
+  <link rel="stylesheet" href="assets/site.css" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="logo">KNUVI 3D Vision</div>
+      <div class="nav-links">
+        <a href="#abstract">Abstract</a>
+        <a href="#studies">Studies</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#results">Results</a>
+        <a href="#software">Software</a>
+        <a href="#references">References</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <span class="badge">KNU Capstone Design Project 2026-1 · KETI Collaboration</span>
+    <h1>Robust 3D Vision under Adverse Weather Conditions</h1>
+    <p>
+      눈, 야간 등 악천후 환경에서 3D Object Detection과 3D Gaussian Splatting의 성능 저하 원인을 분석하고,
+      입력 데이터 전처리와 포인트 복원을 통해 자율주행·로보틱스 인지 시스템의 강건성을 높이는 연구입니다.
+    </p>
+    <div class="authors">
+      Kyungpook National University · Korea Electronics Technology Institute<br />
+      Sang-hyo Park Lab / Capstone Design Team 3
+    </div>
+    <div class="buttons">
+      <a class="button" href="https://github.com/capstone-design-2-team3/KNUVI_Capstone_Project_2026-1">GitHub Repository</a>
+      <a class="button ghost" href="#studies">View Studies</a>
+      <a class="button ghost" href="#software">SW Registration Module</a>
+    </div>
+    <div class="hero-art">
+      <img src="assets/project-pipeline.svg" alt="Adverse weather 3D vision research pipeline" />
+    </div>
+  </header>
+
+  <main>
+    <section id="abstract">
+      <h2 class="section-title">Abstract</h2>
+      <p class="section-lead">
+        기존 3D Vision 모델은 대부분 맑은 날씨 데이터셋을 중심으로 학습되어, 야간·강설과 같은 실제 주행 악조건에서
+        입력 모달리티의 품질 저하와 도메인 변화로 인해 성능이 크게 감소합니다. 본 프로젝트는 세 가지 케이스 스터디를 통해
+        악천후 조건에서의 3D 인지 성능 저하 원인을 정량적으로 분석합니다.
+      </p>
+      <div class="card">
+        <div class="metric-strip">
+          <div class="metric"><strong>3</strong><span>Research tracks: Night 3DOD, Snow 3DOD, Snow 3DGS</span></div>
+          <div class="metric"><strong>6</strong><span>Outdoor Free Dataset scenes used for Snow-conditioned 3DGS analysis</span></div>
+          <div class="metric"><strong>4+</strong><span>3D object detection models compared under snowfall</span></div>
+          <div class="metric"><strong>3DGS</strong><span>Posed COLMAP+3DGS and unposed LongSplat pipelines compared</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="studies">
+      <h2 class="section-title">Research Overview</h2>
+      <p class="section-lead">
+        세 연구는 서로 다른 악천후 조건과 3D Vision 태스크를 다루지만, 공통적으로 “입력 데이터의 어떤 변화가 3D 인지 성능을 떨어뜨리는가?”라는 질문을 중심으로 연결됩니다.
+      </p>
+      <div class="wide-figure"><img src="assets/research-map.svg" alt="Research map of the three case studies" /></div>
+      <div class="grid grid-3" style="margin-top:18px">
+        <article class="card study">
+          <div class="kicker">Study 01</div>
+          <h3>Nighttime 3D Object Detection</h3>
+          <p>
+            nuScenes 야간 장면을 대상으로 MoME, DeepInteraction, BEVFusion의 LiDAR-camera fusion 성능을 분석합니다.
+            LiDAR 포인트 품질은 상대적으로 안정적인 반면, 카메라의 노출 부족이 성능 저하와 강하게 연결됨을 확인했습니다.
+          </p>
+        </article>
+        <article class="card study">
+          <div class="kicker">Study 02</div>
+          <h3>Snow-induced 3D Object Detection</h3>
+          <p>
+            KITTI에 물리 기반 강설 시뮬레이션을 적용해 KITTI-Snow를 구축하고, 강설로 인한 LiDAR 포인트 희소화가
+            객체 탐지 성능을 떨어뜨리는 핵심 원인임을 분석합니다.
+          </p>
+        </article>
+        <article class="card study">
+          <div class="kicker">Study 03</div>
+          <h3>Snowy-scene 3D Gaussian Splatting</h3>
+          <p>
+            Snow-conditioned Free 데이터셋을 구성하고, 일반 3DGS와 LongSplat을 비교하여 강설 아티팩트와 2D de-snow 전처리가
+            렌더링 품질 및 카메라 포즈 추정에 미치는 영향을 분석합니다.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="pipeline">
+      <h2 class="section-title">Unified Pipeline</h2>
+      <p class="section-lead">
+        프로젝트 전체 흐름은 악천후 데이터 생성, 전처리/복원, 3D 인지 모델 실행, 정량평가 순서로 구성됩니다.
+      </p>
+      <div class="card pipeline">
+        <img src="assets/project-pipeline.svg" alt="Project pipeline" />
+      </div>
+      <div class="grid grid-2" style="margin-top:18px">
+        <div class="card study">
+          <div class="kicker">3DGS Snow Pipeline</div>
+          <h3>Free → WeatherEdit → MWFormer → 3DGS / LongSplat</h3>
+          <ul>
+            <li>Free Dataset의 야외 장면을 사용합니다.</li>
+            <li>WeatherEdit 기반 3D 날씨 합성으로 Snow-conditioned Free 데이터를 구성합니다.</li>
+            <li>MWFormer로 2D de-snow refinement를 수행합니다.</li>
+            <li>COLMAP+3DGS와 LongSplat의 렌더링 품질 및 포즈 정확도를 비교합니다.</li>
+          </ul>
+        </div>
+        <div class="card study">
+          <div class="kicker">3DOD Snow Pipeline</div>
+          <h3>KITTI → KITTI-Snow → Point Completion → Detection</h3>
+          <ul>
+            <li>물리 기반 눈 시뮬레이션으로 LiDAR 산란 및 포인트 유실을 재현합니다.</li>
+            <li>Sparse U-Net 기반 복원과 HPR 후처리로 손실된 기하 구조를 보완합니다.</li>
+            <li>PointPillars, PointRCNN, VoxelR-CNN, MVMM에서 AP 변화를 평가합니다.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="results">
+      <h2 class="section-title">Key Results</h2>
+      <p class="section-lead">
+        아래 표는 업로드된 3개 논문의 핵심 결과를 웹페이지용으로 압축한 것입니다. 최종 제출 전 실제 논문 PDF의 표 번호와 수치를 다시 한 번 대조하세요.
+      </p>
+      <div class="tabs">
+        <button class="tab-btn active" data-target="tab-night">Night 3DOD</button>
+        <button class="tab-btn" data-target="tab-snow-od">Snow 3DOD</button>
+        <button class="tab-btn" data-target="tab-snow-gs">Snow 3DGS</button>
+      </div>
+
+      <div id="tab-night" class="tab-panel active card">
+        <h3>Nighttime 3D Object Detection</h3>
+        <p class="section-lead">
+          저조도 개선 기법은 평균 밝기와 노출 부족 비율을 개선했지만, 3D 객체 탐지 mAP는 정체되거나 하락했습니다.
+          이는 사람 눈에 좋은 영상이 곧바로 기계 인지 성능 향상으로 이어지지 않음을 보여줍니다.
+        </p>
+        <table>
+          <thead><tr><th>Metric / Model</th><th>Original</th><th>CLAHE</th><th>EnlightenGAN</th><th>Zero-DCE++</th></tr></thead>
+          <tbody>
+            <tr><td>Mean Brightness ↑</td><td>35.59</td><td>58.04</td><td>117.88</td><td>100.54</td></tr>
+            <tr><td>Low-light Pixel Ratio ↓</td><td>0.47</td><td>0.17</td><td>0.00</td><td>0.03</td></tr>
+            <tr><td>MoME mAP ↑</td><td>0.3742</td><td>0.3685</td><td>0.3742</td><td>0.3742</td></tr>
+            <tr><td>DeepInteraction mAP ↑</td><td>0.3744</td><td>0.3534</td><td>0.3748</td><td>0.3492</td></tr>
+            <tr><td>BEVFusion mAP ↑</td><td>0.3546</td><td>0.3359</td><td>0.3548</td><td>0.3189</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="tab-snow-od" class="tab-panel card">
+        <h3>Snow-induced 3D Object Detection</h3>
+        <p class="section-lead">
+          강설 환경에서는 LiDAR 포인트가 희소해지며, 특히 자동차와 자전거 클래스에서 AP 감소가 크게 나타났습니다.
+          제안한 포인트 복원 파이프라인은 자동차 포인트 수를 240.46개에서 350.39개로 증가시켰습니다.
+        </p>
+        <table>
+          <thead><tr><th>Dataset</th><th>Pedestrian Avg. Points</th><th>Cyclist Avg. Points</th><th>Car Avg. Points</th></tr></thead>
+          <tbody>
+            <tr><td>KITTI</td><td>209.89</td><td>164.58</td><td>499.93</td></tr>
+            <tr><td>KITTI-Snow</td><td>193.26</td><td>135.17</td><td>240.46</td></tr>
+            <tr><td>KITTI-Snow w/ Ours</td><td>265.66</td><td>186.22</td><td>350.39</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="tab-snow-gs" class="tab-panel card">
+        <h3>Snowy-scene 3D Gaussian Splatting</h3>
+        <p class="section-lead">
+          일반 3DGS는 전체적으로 LongSplat보다 높은 렌더링 품질을 보였고, de-snow 전처리 후 복원 품질이 회복되었습니다.
+          다만 프레임 단위 2D 전처리는 시점 간 일관성 문제를 완전히 해결하지 못할 수 있습니다.
+        </p>
+        <table>
+          <thead><tr><th>Pipeline</th><th>Condition</th><th>PSNR ↑</th><th>SSIM ↑</th><th>LPIPS ↓</th></tr></thead>
+          <tbody>
+            <tr><td>3DGS</td><td>Clean</td><td>36.796</td><td>0.969</td><td>0.030</td></tr>
+            <tr><td>3DGS</td><td>Snow</td><td>23.845</td><td>0.835</td><td>0.207</td></tr>
+            <tr><td>3DGS</td><td>De-snow</td><td>28.493</td><td>0.909</td><td>0.111</td></tr>
+            <tr><td>LongSplat</td><td>Clean</td><td>25.842</td><td>0.717</td><td>0.239</td></tr>
+            <tr><td>LongSplat</td><td>Snow</td><td>21.307</td><td>0.597</td><td>0.369</td></tr>
+            <tr><td>LongSplat</td><td>De-snow</td><td>23.881</td><td>0.670</td><td>0.314</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="software">
+      <h2 class="section-title">Software Module: Snow Image Refinement Pipeline</h2>
+      <p class="section-lead">
+        3DGS Snow 파이프라인 중 SW 등록 대상으로 분리 가능한 범위는 “MWFormer 모델 자체”가 아니라,
+        이미 정렬된 snow image folder를 입력받아 MWFormer를 자동 실행하고 LongSplat / COLMAP+3DGS 입력 구조로 정리하는 wrapper 소프트웨어입니다.
+      </p>
+      <div class="grid grid-2">
+        <div class="card study">
+          <div class="kicker">Scope</div>
+          <h3>Included</h3>
+          <ul>
+            <li>snow image folder 입력 검사</li>
+            <li>MWFormer 외부 모델 실행 자동화</li>
+            <li>de_snow image folder 생성</li>
+            <li>입력과 동일한 파일명 및 프레임 수 유지</li>
+            <li>실행 로그 및 manifest JSON 저장</li>
+          </ul>
+        </div>
+        <div class="card study">
+          <div class="kicker">Third-party Separation</div>
+          <h3>Excluded</h3>
+          <ul>
+            <li>MWFormer 원본 모델 구조 및 pretrained weight</li>
+            <li>평가용 notebook 및 별도 metric scripts</li>
+            <li>dataset preparation 단계의 frame sync / reindexing script</li>
+            <li>외부 모델 코드를 자체 개발 코드처럼 설명하는 행위</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h3>Example Command</h3>
+        <pre class="code-block"><code>python tools/run_refinement.py \
+  --input_dir data/snow/grass/input \
+  --output_dir data/de_snow/grass/input \
+  --model mwformer \
+  --mwformer_repo external/MWFormer \
+  --weight_path weights/MWFormer/backbone.pth \
+  --config configs/refinement.yaml</code></pre>
+      </div>
+    </section>
+
+    <section id="repository">
+      <h2 class="section-title">Repository Structure</h2>
+      <p class="section-lead">
+        본 페이지는 기존 GitHub 레포지토리의 연구 구조를 보여주는 프로젝트 소개 페이지입니다. 실제 코드와 실험 자료는 각 파트 폴더에 정리합니다.
+      </p>
+      <div class="card">
+        <pre class="code-block"><code>KNUVI_Capstone_Project_2026-1/
+├── 3DGS_Part/
+├── 3DOD_RAIN&NIGHT_Part/
+├── 3DOD_SNOW_Part/
+├── Meeting_Note/
+├── Presentation/
+├── SW_registration/
+│   └── snow_refinement_pipeline/
+└── docs/
+    ├── index.html
+    ├── .nojekyll
+    └── assets/</code></pre>
+      </div>
+    </section>
+
+    <section id="references">
+      <h2 class="section-title">Papers & References</h2>
+      <div class="card refs">
+        <p><strong>Night 3DOD.</strong> 야간 환경에서의 멀티모달 기반 3D 객체 탐지 모델의 성능 저하 사례 연구.</p>
+        <p><strong>Snow 3DOD.</strong> 강설 환경에서의 3D 객체 탐지 성능 저하와 포인트 희소성 복원 연구.</p>
+        <p><strong>Snow 3DGS.</strong> 다양한 포즈 추정 환경 3D Gaussian Splatting의 강설 환경 강건성 및 2차원 전처리 효과 사례 연구.</p>
+        <p><strong>Project repository.</strong> capstone-design-2-team3/KNUVI_Capstone_Project_2026-1.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="inner">
+      <div>© 2026 KNUVI Capstone Design Team 3</div>
+      <div>Built for GitHub Pages · Static HTML/CSS/JS</div>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>
