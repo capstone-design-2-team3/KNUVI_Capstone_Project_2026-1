@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="KNUVI adverse-weather robust 3D vision project page: Night 3DOD, Snow 3DOD, and Snow 3DGS." />
+  <title>KNUVI Adverse-Weather Robust 3D Vision</title>
+  <link rel="stylesheet" href="assets/site.css" />
+</head>
+<body>
+  <header class="topbar">
+    <nav class="container nav" aria-label="Main navigation">
+      <a class="brand" href="#top">KNUVI Weather-Robust 3D Vision</a>
+      <div class="navlinks">
+        <a href="#abstract">Abstract</a>
+        <a href="#problems">1. Problems</a>
+        <a href="#dataset">2. Dataset</a>
+        <a href="#method">3. Method</a>
+        <a href="#results">4. Final Results</a>
+        <a href="#authors">Authors</a>
+        <a class="button" href="https://github.com/capstone-design-2-team3/KNUVI_Capstone_Project_2026-1">GitHub</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-card">
+        <div class="hero-copy">
+          <span class="eyebrow">KNU Capstone Design · 2026</span>
+          <h1>Adverse-Weather Robust 3D Vision</h1>
+          <p class="hero-lead">야간·강설 환경에서 3D 객체 탐지와 3D Gaussian Splatting이 왜 성능 저하를 겪는지 분석하고, 전처리 기반 복원 방법이 실제 인지 성능 회복으로 이어지는지 검증한 3개의 상호보완적 사례 연구입니다.</p>
+          <div class="btn-row">
+            <a class="btn primary" href="#abstract">Read Abstract</a>
+            <a class="btn" href="#results">View Final Results</a>
+            <a class="btn dark" href="https://github.com/capstone-design-2-team3/KNUVI_Capstone_Project_2026-1">GitHub Repository</a>
+          </div>
+          <p class="hero-note">All visual media on this page are extracted from the submitted papers. No generated illustration is used.</p>
+        </div>
+        <div class="hero-figures" aria-label="Paper figures preview">
+          <figure><img src="figures/night3dod_enhancement_bbox.png" alt="Night 3DOD low-light enhancement and 3D detection visualization"><figcaption>Night 3DOD</figcaption></figure>
+          <figure><img src="figures/snow3dod_dataset.png" alt="KITTI-Snow dataset construction figure"><figcaption>Snow 3DOD</figcaption></figure>
+          <figure><img src="figures/snow3dgs_method_pipeline.png" alt="Snow 3DGS method pipeline figure"><figcaption>Snow 3DGS</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="abstract" class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Abstract</h2>
+          <p>Three case studies for adverse-weather 3D perception and reconstruction.</p>
+        </div>
+        <div class="lead-card">
+          <p>본 프로젝트는 자율주행 및 야외 3D 비전 시스템이 실제 환경에서 마주치는 <b>야간 저조도</b>와 <b>강설</b> 조건을 중심으로, 3D 객체 탐지와 3D Gaussian Splatting 기반 장면 재구성의 성능 저하 원인을 분석합니다. 단순히 “이미지를 보기 좋게 만드는 것”이 아니라, 전처리 결과가 <b>mAP, AP, PSNR, SSIM, LPIPS, ATE/RTE/RPE</b>와 같은 기계 인지 및 재구성 지표에 실제로 도움이 되는지를 검증합니다.</p>
+          <p>세부 연구는 ① 야간 환경에서 LiDAR-camera fusion 3D 객체 탐지 모델의 성능 저하 원인 분석, ② 강설 환경에서 LiDAR 포인트 희소화와 포인트 클라우드 복원, ③ 강설 환경에서 2D de-snow 전처리가 posed 3DGS와 unposed LongSplat에 미치는 영향 비교로 구성됩니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="problems" class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>1. Problems</h2>
+          <p>각 연구는 서로 다른 악천후 실패 요인을 다룹니다.</p>
+        </div>
+
+        <div class="study-block">
+          <div class="study-text">
+            <span class="tag night">Night 3DOD</span>
+            <h3>야간에서는 카메라 품질 저하가 LiDAR-camera fusion을 방해합니다.</h3>
+            <p>야간 장면에서는 LiDAR의 객체당 포인트 수는 주간과 유사하게 유지되지만, 카메라 영상의 평균 밝기와 노출 품질이 크게 낮아집니다. 따라서 저조도 영상 개선이 실제 3D 탐지 성능 개선으로 이어지는지 검증해야 합니다.</p>
+          </div>
+          <figure class="paper-figure"><img class="clickable" src="figures/night3dod_enhancement_bbox.png" alt="Low-light enhancement methods with detection bounding boxes"><figcaption>논문 그림: original, CLAHE, EnlightenGAN, Zero-DCE++ 적용 후 3D bounding box 시각화.</figcaption></figure>
+        </div>
+
+        <div class="study-block reverse">
+          <div class="study-text">
+            <span class="tag snow">Snow 3DOD</span>
+            <h3>강설은 LiDAR 포인트를 산란·차단하여 객체 형상을 희소하게 만듭니다.</h3>
+            <p>눈 입자는 LiDAR 신호를 왜곡해 포인트 유실과 허위 포인트를 만들고, 특히 자동차·자전거처럼 형상 정보가 중요한 객체에서 AP 하락을 유발합니다. 실제 강설 데이터 확보가 어렵기 때문에 물리 기반 시뮬레이션 데이터가 필요합니다.</p>
+          </div>
+          <figure class="paper-figure"><img class="clickable" src="figures/snow3dod_dataset.png" alt="KITTI to KITTI-Snow dataset construction"><figcaption>논문 그림: KITTI raw point clouds/images를 3D corruption framework로 KITTI-Snow로 변환.</figcaption></figure>
+        </div>
+
+        <div class="study-block">
+          <div class="study-text">
+            <span class="tag gs">Snow 3DGS</span>
+            <h3>눈 아티팩트와 포즈 추정 불안정성은 3D 장면 재구성을 저하시킵니다.</h3>
+            <p>2D de-snow 전처리는 프레임 단위로 영상을 복원하지만, 잔여 눈 아티팩트가 프레임마다 다르면 multi-view consistency가 깨질 수 있습니다. 이는 COLMAP+3DGS와 LongSplat에서 서로 다른 실패 양상으로 나타납니다.</p>
+          </div>
+          <figure class="paper-figure"><img class="clickable" src="figures/snow3dgs_hydrant_results.png" alt="Hydrant scene rendering results"><figcaption>논문 그림: hydrant 장면에서 posed 3DGS와 LongSplat의 clean/snow/de-snow 렌더링 결과.</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="dataset" class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>2. Dataset Construction</h2>
+          <p>각 연구가 어떤 입력 데이터를 사용하거나 구축했는지 정리합니다.</p>
+        </div>
+        <div class="dataset-grid">
+          <article class="dataset-card">
+            <h3>Night 3DOD · nuScenes Night Subset</h3>
+            <p>nuScenes validation set에서 scene description의 <b>night, dark</b> 키워드를 기준으로 야간 장면을 추출하고, 전방 카메라 영상을 확인해 실제 야간 장면만 포함했습니다. 주간 데이터는 해당 키워드가 없는 나머지 장면으로 구성했습니다.</p>
+            <ul>
+              <li>Dataset: nuScenes trainval validation set</li>
+              <li>Scene grouping: Hard / Easy by model mAP</li>
+              <li>Quality metrics: brightness, intensity std, under-exposed pixel ratio, LiDAR points/object</li>
+            </ul>
+          </article>
+          <article class="dataset-card media-card">
+            <figure><img class="clickable" src="figures/snow3dod_dataset.png" alt="KITTI-Snow dataset construction"><figcaption><b>Snow 3DOD.</b> 물리 기반 snow corruption으로 KITTI-Snow 구축.</figcaption></figure>
+          </article>
+          <article class="dataset-card media-card">
+            <figure><img class="clickable" src="figures/snow3dgs_dataset_pipeline.png" alt="Snow-conditioned Free dataset construction pipeline"><figcaption><b>Snow 3DGS.</b> Free Dataset과 WeatherEdit을 활용한 Snow-conditioned Free 구축.</figcaption></figure>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="method" class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>3. Method Pipeline</h2>
+          <p>전처리와 3D 모델 평가가 어떻게 연결되는지 연구별로 보여줍니다.</p>
+        </div>
+
+        <div class="method-grid">
+          <article class="method-card">
+            <figure><img class="clickable" src="figures/night3dod_enhancement_bbox.png" alt="Night 3DOD low-light enhancement and detection"><figcaption>Low-light enhancement + 3D detector re-evaluation</figcaption></figure>
+            <div class="method-body">
+              <span class="tag night">Night 3DOD</span>
+              <h3>저조도 영상 개선 후 3D 탐지 재평가</h3>
+              <p>MoME, DeepInteraction, BEVFusion에 대해 원본 야간 영상과 CLAHE, EnlightenGAN, Zero-DCE++ 적용 영상을 비교하여 시각적 화질 개선이 mAP 향상으로 이어지는지 분석했습니다.</p>
+            </div>
+          </article>
+          <article class="method-card">
+            <figure><img class="clickable" src="figures/snow3dod_completion_pipeline.png" alt="Sparse U-Net point completion pipeline"><figcaption>Sparse U-Net point completion pipeline</figcaption></figure>
+            <div class="method-body">
+              <span class="tag snow">Snow 3DOD</span>
+              <h3>포인트 클라우드 복원 전처리</h3>
+              <p>Snow point clouds를 voxelization 및 feature extraction 후 Sparse U-Net으로 복원하고, HPR filtering과 topology filtering으로 기하학적으로 타당한 completed point clouds를 생성했습니다.</p>
+            </div>
+          </article>
+          <article class="method-card">
+            <figure><img class="clickable" src="figures/snow3dgs_method_pipeline.png" alt="MWFormer and 3DGS LongSplat pipeline"><figcaption>MWFormer de-snow + 3DGS / LongSplat comparison</figcaption></figure>
+            <div class="method-body">
+              <span class="tag gs">Snow 3DGS</span>
+              <h3>MWFormer 기반 de-snow 후 3D 재구성 비교</h3>
+              <p>Clean, Snow, De-snow 조건을 COLMAP+3DGS와 LongSplat에 입력하여 렌더링 품질과 카메라 포즈 정확도를 비교했습니다.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="results" class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>4. Final Results</h2>
+          <p>각 연구의 목적에 맞춰 최종 결과와 의미를 분리해 정리했습니다.</p>
+        </div>
+
+        <article class="result-study">
+          <div class="result-head">
+            <span class="tag night">Night 3DOD</span>
+            <h3>목적: 야간 3D 객체 탐지 성능 저하가 어느 모달리티에서 발생하는지 분석하고, 저조도 개선이 mAP를 회복시키는지 검증</h3>
+          </div>
+          <div class="result-content">
+            <figure class="paper-figure"><img class="clickable" src="figures/night3dod_enhancement_bbox.png" alt="Night 3DOD final qualitative result"><figcaption>저조도 개선 기법 적용 후 시각적으로 밝아졌지만, 3D detector의 bounding box 결과는 안정적으로 개선되지 않았습니다.</figcaption></figure>
+            <div class="result-text">
+              <div class="metric-row"><div><b>카메라 밝기</b><span>35.59 → 117.88</span><small>EnlightenGAN 기준 평균 밝기 증가</small></div><div><b>BEVFusion mAP</b><span>0.3546 → 0.3189</span><small>Zero-DCE++ 적용 시 하락</small></div></div>
+              <p>야간에서는 LiDAR의 객체당 포인트 수가 주간과 유사하게 유지되는 반면, 카메라 평균 밝기와 노출 품질이 크게 저하되었습니다. 그러나 CLAHE, EnlightenGAN, Zero-DCE++는 이미지를 사람 눈에 더 밝고 선명하게 만들었음에도, 세 detector의 mAP를 안정적으로 향상시키지 못했습니다.</p>
+              <p class="takeaway"><b>Final takeaway:</b> 야간 3DOD의 핵심 문제는 단순한 시각적 밝기 부족만이 아니라, 탐지 모델이 학습한 feature distribution과 맞지 않는 입력 변화입니다. 따라서 인간 시각 중심의 enhancement가 아니라 <b>detection-aware low-light refinement</b>가 필요합니다.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="result-study">
+          <div class="result-head">
+            <span class="tag snow">Snow 3DOD</span>
+            <h3>목적: 강설로 인한 LiDAR 포인트 희소화가 3D 객체 탐지 성능을 얼마나 저하시키는지 분석하고, 포인트 복원으로 성능 회복 가능성을 검증</h3>
+          </div>
+          <div class="result-content">
+            <figure class="paper-figure"><img class="clickable" src="figures/snow3dod_completion_pipeline.png" alt="Snow 3DOD point completion pipeline"><figcaption>포인트 클라우드 복원 파이프라인은 Snow point clouds에서 손실된 표면 구조를 일부 보완합니다.</figcaption></figure>
+            <div class="result-text">
+              <div class="metric-row"><div><b>Car points</b><span>240.46 → 350.39</span><small>KITTI-Snow → w. Ours</small></div><div><b>Voxel R-CNN Car AP</b><span>+1.70</span><small>Easy 기준 개선</small></div></div>
+              <p>KITTI-Snow에서 자동차 평균 포인트 수는 원본 KITTI 대비 499.93개에서 240.46개로 크게 감소했습니다. 제안한 복원 파이프라인 적용 후 자동차는 350.39개, 보행자는 265.66개, 자전거는 186.22개 수준으로 포인트 수가 증가했습니다.</p>
+              <p>성능 측면에서는 Voxel R-CNN에서 보행자 Moderate 기준 약 3.74 AP, 자동차 Easy 기준 약 1.70 AP 개선처럼 일부 모델·클래스에서 회복 효과가 확인되었습니다. 다만 자전거처럼 얇고 불연속적인 구조를 가진 클래스는 개선이 제한적이었습니다.</p>
+              <p class="takeaway"><b>Final takeaway:</b> 강설 3DOD의 주요 원인은 포인트 클라우드 희소화이며, 명시적 포인트 복원은 성능 저하를 완화할 수 있습니다. 그러나 클래스별 구조와 데이터 불균형을 반영한 특화 복원 전략이 추가로 필요합니다.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="result-study">
+          <div class="result-head">
+            <span class="tag gs">Snow 3DGS</span>
+            <h3>목적: 강설 환경에서 일반 3DGS와 포즈 추정 3DGS의 강건성을 비교하고, MWFormer de-snow 전처리가 렌더링 품질과 포즈 추정에 미치는 영향을 분석</h3>
+          </div>
+          <div class="result-content">
+            <figure class="paper-figure"><img class="clickable" src="figures/snow3dgs_desnow_examples.png" alt="Snow 3DGS de-snow examples"><figcaption>sky, stair 장면에서는 de-snow 후 눈 잔상이 줄어들며 렌더링 품질 회복 효과가 비교적 뚜렷했습니다.</figcaption></figure>
+            <div class="result-text">
+              <div class="metric-row"><div><b>3DGS PSNR</b><span>23.845 → 28.493</span><small>Snow → De-snow, Input GT 기준</small></div><div><b>LongSplat PSNR</b><span>21.307 → 23.881</span><small>Snow → De-snow, Input GT 기준</small></div></div>
+              <p>평균적으로 COLMAP+3DGS는 LongSplat보다 높은 렌더링 품질을 보였고, MWFormer de-snow 전처리는 두 파이프라인 모두에서 PSNR/SSIM/LPIPS를 개선하는 경향을 보였습니다. 특히 3DGS는 Snow PSNR 23.845에서 De-snow 28.493으로 회복되었습니다.</p>
+              <p>다만 2D 전처리는 프레임 단위 복원이므로 잔여 눈 아티팩트가 프레임마다 다르게 남을 수 있고, 이는 multi-view inconsistency를 유발할 수 있습니다. hydrant처럼 급격한 카메라 회전이 포함된 장면에서는 COLMAP+3DGS와 LongSplat의 실패 양상이 서로 달랐습니다.</p>
+              <p class="takeaway"><b>Final takeaway:</b> 일반적인 강설 장면에서는 포즈를 선추정하는 COLMAP+3DGS가 전체적으로 안정적이고, MWFormer de-snow는 렌더링 품질 회복에 도움이 됩니다. 그러나 극단적 포즈 조건에서는 unposed 3DGS가 해상도 저하 없이 재구성하는 장점도 관찰되어, 향후에는 전처리와 포즈 추정을 함께 고려하는 통합 접근이 필요합니다.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="authors" class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Authors</h2>
+          <p>저자 정보는 논문별로 구분했습니다.</p>
+        </div>
+        <div class="authors-grid">
+          <article class="author-card"><h3>Night 3DOD</h3><p><b>Choi Gyeongjin</b>, Bae Chaeeun, Lee Donghun, Jinwoo Jeong, Sanghyo Park</p><small>A Case Study on Performance Degradation of Multimodal 3D Object Detection Models in Nighttime Scenes</small></article>
+          <article class="author-card"><h3>Snow 3DOD</h3><p><b>Lee Sangwook</b>, Bae Chaeeun, Lee Donghun, Jinwoo Jeong, Sanghyo Park</p><small>Mitigating Snow-Induced Sparsity in 3D Object Detection via Point Completion</small></article>
+          <article class="author-card"><h3>Snow 3DGS</h3><p><b>Yoonho Lee</b>, Kim Gyudo, Song Hojun, Jinwoo Jeong, Sanghyo Park</p><small>A Case Study on the Robustness of 3D Gaussian Splatting in Snowy Scenes and the Effects of 2D Pre-processing Across Pose Estimation Methods</small></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="lightbox" aria-modal="true" role="dialog">
+    <button type="button">Close</button>
+    <img src="" alt="Expanded paper figure" />
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Built for GitHub Pages. Visual figures are extracted only from the submitted papers.</p>
+    </div>
+  </footer>
+  <script src="assets/site.js"></script>
+</body>
+</html>
