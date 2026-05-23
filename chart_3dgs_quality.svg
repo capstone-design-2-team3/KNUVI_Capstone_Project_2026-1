@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 460" role="img">
+<rect width="100%" height="100%" rx="24" fill="#08111f"/>
+<text x="50" y="55" fill="#f8fafc" font-family="Arial" font-size="28" font-weight="800">Night 3DOD result: visual quality improves, mAP does not</text>
+<text x="50" y="84" fill="#bae6fd" font-family="Arial" font-size="16">Brightness increases strongly, while 3D detection performance may stagnate or decline.</text>
+<line x1="80" y1="380" x2="900" y2="380" stroke="#334155" stroke-width="2"/>
+<rect x="80.0" y="303.1" width="181.0" height="76.9" rx="12" fill="#60a5fa"/>
+<text x="170.5" y="289.1" fill="#f8fafc" font-family="Arial" font-size="18" text-anchor="middle" font-weight="700">35.59</text>
+<text x="170.5" y="410" fill="#cbd5e1" font-family="Arial" font-size="16" text-anchor="middle">Original</text>
+<text x="170.5" y="432" fill="#cbd5e1" font-family="Arial" font-size="16" text-anchor="middle">brightness</text>
+<rect x="293.0" y="125.4" width="181.0" height="254.6" rx="12" fill="#34d399"/>
+<text x="383.5" y="111.4" fill="#f8fafc" font-family="Arial" font-size="18" text-anchor="middle" font-weight="700">117.88</text>
+<text x="383.5" y="410" fill="#cbd5e1" font-family="Arial" font-size="16" text-anchor="middle">EnlightenGAN</text>
+<text x="383.5" y="432" fill="#cbd5e1" font-family="Arial" font-size="16" text-anchor="middle">brightness</text>
+<rect x="506.0" y="303.4" width="181.0" height="76.6" rx="12" fill="#fbbf24"/>
+<text x="596.5" y="289.4" fill="#f8fafc" font-family="Arial" font-size="18" text-anchor="middle" font-weight="700">35.46</text>
+<text x="596.5" y="410" fill="#cbd5e1" font-family="Arial" font-size="16" text-anchor="middle">BEVFusion</text>
+<text x="596.5" y="432" fill="#cbd5e1" font-family="Arial" font-size="16" text-anchor="middle">Original mAP</text>
+<rect x="719.0" y="311.1" width="181.0" height="68.9" rx="12" fill="#fb7185"/>
+<text x="809.5" y="297.1" fill="#f8fafc" font-family="Arial" font-size="18" text-anchor="middle" font-weight="700">31.89</text>
+<text x="809.5" y="410" fill="#cbd5e1" font-family="Arial" font-size="16" text-anchor="middle">BEVFusion</text>
+<text x="809.5" y="432" fill="#cbd5e1" font-family="Arial" font-size="16" text-anchor="middle">Zero-DCE++ mAP</text>
+</svg>
