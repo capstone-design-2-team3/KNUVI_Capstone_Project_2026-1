@@ -78,16 +78,16 @@
           <div class="study-text">
             <span class="tag snow">Snow 3DOD</span>
             <h3>강설은 LiDAR 포인트를 산란·차단하여 객체 형상을 희소하게 만듭니다.</h3>
-            <p>눈 입자는 LiDAR 신호를 왜곡해 포인트 유실과 허위 포인트를 만들고, 특히 자동차·자전거처럼 형상 정보가 중요한 객체에서 AP 하락을 유발합니다. 실제 강설 데이터 확보가 어렵기 때문에 물리 기반 시뮬레이션 데이터가 필요합니다.</p>
+            <p>눈 입자는 LiDAR 신호를 왜곡해 포인트 유실과 허위 포인트를 만들고, 특히 자동차·자전거처럼 형상 정보가 중요한 객체에서 AP 하락을 유발합니다. 또한 실제 강설 데이터 확보가 어렵기 때문에 분석이 부족합니다. 따라서 물리 기반 시뮬레이션을 통해 직접 snow 데이터를 생성하고, 유실된 포인트를 증강시켜 탐지 성능을 확보할 필요가 있습니다.</p>
           </div>
-          <figure class="paper-figure"><img class="clickable" src="figures/snow3dod_dataset.png" alt="KITTI to KITTI-Snow dataset construction"><figcaption>논문 그림: KITTI raw point clouds/images를 3D corruption framework로 KITTI-Snow로 변환.</figcaption></figure>
+          <figure class="paper-figure"><img class="clickable" src="figures/snow3dod_problems.png" alt="KITTI to KITTI-Snow dataset construction"><figcaption>원본 KITTI 데이터와 Snow Simulation 적용 후 포인트 클라우드 비교 사진.</figcaption></figure>
         </div>
 
         <div class="study-block">
           <div class="study-text">
             <span class="tag gs">Snow 3DGS</span>
             <h3>눈 아티팩트와 포즈 추정 불안정성은 3D 장면 재구성을 저하시킵니다.</h3>
-            <p>2D de-snow 전처리는 프레임 단위로 영상을 복원하지만, 잔여 눈 아티팩트가 프레임마다 다르면 multi-view consistency가 깨질 수 있습니다. 이는 COLMAP+3DGS와 LongSplat에서 서로 다른 실패 양상으로 나타납니다.</p>
+            <p>2D de-snow 전처리는 프레임 단위로 영상을 복원하지만, 잔여 눈 아티팩트가 프레임마다 다르면 multi-view consistency가 깨질 수 있습니다. 이러한 영향은 posed/unposed 환경에서 서로 다르게 나타날 가능성이 있습니다. 따라서 COLMAP+3DGS와 LongSplat 환경에서 전처리에 따른 성능 변화를 분석할 필요가 있습니다. </p>
           </div>
           <figure class="paper-figure"><img class="clickable" src="figures/snow3dgs_hydrant_results.png" alt="Hydrant scene rendering results"><figcaption>논문 그림: hydrant 장면에서 posed 3DGS와 LongSplat의 clean/snow/de-snow 렌더링 결과.</figcaption></figure>
         </div>
@@ -184,7 +184,7 @@
             <h3>목적: 강설로 인한 LiDAR 포인트 희소화가 3D 객체 탐지 성능을 얼마나 저하시키는지 분석하고, 포인트 복원으로 성능 회복 가능성을 검증</h3>
           </div>
           <div class="result-content">
-            <figure class="paper-figure"><img class="clickable" src="figures/snow3dod_completion_pipeline.png" alt="Snow 3DOD point completion pipeline"><figcaption>포인트 클라우드 복원 파이프라인은 Snow point clouds에서 손실된 표면 구조를 일부 보완합니다.</figcaption></figure>
+            <figure class="paper-figure"><img class="clickable" src="figures/snow3dod_res.png" alt="Snow 3DOD point completion pipeline"><figcaption>포인트 클라우드 복원 파이프라인은 Snow point clouds에서 손실된 표면 구조를 일부 보완합니다.</figcaption></figure>
             <div class="result-text">
               <div class="metric-row"><div><b>Car points</b><span>240.46 → 350.39</span><small>KITTI-Snow → w. Ours</small></div><div><b>Voxel R-CNN Car AP</b><span>+1.70</span><small>Easy 기준 개선</small></div></div>
               <p>KITTI-Snow에서 자동차 평균 포인트 수는 원본 KITTI 대비 499.93개에서 240.46개로 크게 감소했습니다. 제안한 복원 파이프라인 적용 후 자동차는 350.39개, 보행자는 265.66개, 자전거는 186.22개 수준으로 포인트 수가 증가했습니다.</p>
